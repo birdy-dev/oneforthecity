@@ -4,6 +4,7 @@ import instagramIcon from "@/images/icons/instagram.svg";
 import lumaIcon from "@/images/icons/luma.png";
 import { Banner } from "./components/Banner";
 import { Footer } from "@/components/Footer";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -82,6 +83,13 @@ export default function Page() {
               has facilitated city-cyphers, freestyle sessions and workshops to
               more than four cities in Canada over the past three years.
             </p>
+          </div>
+        </Container>
+
+        <Container>
+          <div className="border rounded-lg p-8">
+            <h3 className="text-center text-xl">Tools</h3>
+            <Link className="inline-block rounded p-4 bg-gray-300" href="/timer">Battle Timer</Link>
           </div>
         </Container>
       </main>

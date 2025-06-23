@@ -119,16 +119,16 @@ export function BattleTimer(props: Props) {
             : "border-3 border-blue-600",
         )}
       >
-        <div
+        <button
           className={cn(
             "text-3xl absolute top-20 cursor-pointer",
             props.color === "red" ? "font-medium text-red-600" : "text-blue-600",
           )}
           onClick={() => changeTeamName()}
-          role="button"
+          type="button"
         >
           {teamName}
-        </div>
+        </button>
         <span className="text-7xl font-mono">
           {duration.minutes.toString().padStart(2, "0")}:
           {duration.seconds.toString().padStart(2, "0")}.
