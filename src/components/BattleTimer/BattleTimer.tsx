@@ -16,6 +16,8 @@ const btn = cn(
 type Props = {
   teamName?: string;
   color?: "red" | "blue";
+  disabled?: boolean;
+  onStart?: () => void;
 };
 
 export function BattleTimer(props: Props) {
@@ -29,6 +31,7 @@ export function BattleTimer(props: Props) {
   const start = () => {
     if (isRunning || duration.sign <= 0) return;
     setIsRunning(true);
+    props.onStart?.();
 
     timerRef.current = window.setInterval(() => {
       setDuration((prev) => {
@@ -82,6 +85,14 @@ export function BattleTimer(props: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (props.disabled) {
+      return pause();
+    }
+
+    start();
+  }, [props.disabled]);
+
   return (
     <div className="flex flex-col items-center max-w-lg py-4 gap-14">
       <div>
@@ -122,7 +133,9 @@ export function BattleTimer(props: Props) {
         <button
           className={cn(
             "text-3xl absolute top-20 cursor-pointer",
-            props.color === "red" ? "font-medium text-red-600" : "text-blue-600",
+            props.color === "red"
+              ? "font-medium text-red-600"
+              : "text-blue-600",
           )}
           onClick={() => changeTeamName()}
           type="button"
@@ -130,9 +143,9 @@ export function BattleTimer(props: Props) {
           {teamName}
         </button>
         <span className="text-7xl font-mono">
-          {duration.minutes.toString().padStart(2, "0")}:
+          {duration.minutes.toString().padStart(1, "0")}m{" "}
           {duration.seconds.toString().padStart(2, "0")}.
-          {(duration.milliseconds / 100).toString().padEnd(2, "0")}
+          {(duration.milliseconds / 100).toString().padEnd(1, "0")}s
         </span>
         <div
           className="absolute bottom-20 flex items-center justify-center gap-4"
