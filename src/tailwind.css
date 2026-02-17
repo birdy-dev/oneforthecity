@@ -1,6 +1,13 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/inter";
 
 @plugin '@headlessui/tailwindcss';
+
+@theme inline {
+  --font-dm-sans: "DM Sans Variable";
+  --font-inter: "Inter Variable";
+}
 
 @theme {
   --text-*: initial;

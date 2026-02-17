@@ -1,24 +1,24 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
-import Image, { type StaticImageData } from "next/image";
 import { Tab } from "@headlessui/react";
+import { Image } from "@unpic/react";
 import clsx from "clsx";
+import { useEffect, useId, useState } from "react";
 
 import { Container } from "@/components/Container";
 import { DiamondIcon } from "@/components/DiamondIcon";
 import unknownImage from "@/images/avatars/unknown.png";
 
-import djroxswiftImage from "@/images/avatars/djroxswift.jpg";
-import djbennyImage from "@/images/avatars/djbenny.jpg";
 import curtisImage from "@/images/avatars/curtis.jpg";
-import ynotImage from "@/images/avatars/ynot.jpg";
 import dizzylockImage from "@/images/avatars/dizzylock.jpg";
-import slimBoogieImage from "@/images/avatars/slim-boogie.jpg";
-import jinImage from "@/images/avatars/jin.png";
-import jamalAliImage from "@/images/avatars/jamal-ali.png";
+import djbennyImage from "@/images/avatars/djbenny.jpg";
+import djroxswiftImage from "@/images/avatars/djroxswift.jpg";
 import genieImage from "@/images/avatars/genie.png";
-import Link from "next/link";
+import jamalAliImage from "@/images/avatars/jamal-ali.png";
+import jinImage from "@/images/avatars/jin.png";
+import slimBoogieImage from "@/images/avatars/slim-boogie.jpg";
+import ynotImage from "@/images/avatars/ynot.jpg";
+import { Link } from "@tanstack/react-router";
 
 type People = {
   name: string;
@@ -160,10 +160,7 @@ function InstagramLink({ username }: { username?: string }) {
   );
 }
 
-function ImageClipPaths({
-  id,
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { id: string }) {
+function ImageClipPaths({ id, ...props }: React.ComponentPropsWithoutRef<"svg"> & { id: string }) {
   return (
     <svg aria-hidden="true" width={0} height={0} {...props}>
       <defs>
@@ -201,11 +198,7 @@ export function People() {
   }, []);
 
   return (
-    <section
-      id="people"
-      aria-labelledby="people-title"
-      className="py-20 sm:py-32"
-    >
+    <section id="people" aria-labelledby="people-title" className="py-20 sm:py-32">
       <ImageClipPaths id={id} />
       <Container>
         <div className="mx-auto max-w-2xl lg:mx-0">
@@ -216,8 +209,8 @@ export function People() {
             Who's coming?
           </h2>
           <p className="mt-4 font-display text-2xl tracking-tight text-blue-900">
-            We're excited to welcome special guests to be part of this year's
-            One for the City. Registered crews will also be listed.
+            We're excited to welcome special guests to be part of this year's One for the City.
+            Registered crews will also be listed.
           </p>
         </div>
         <Tab.Group
@@ -226,15 +219,15 @@ export function People() {
           vertical={tabOrientation === "vertical"}
         >
           <div className="relative -mx-4 flex overflow-x-auto pb-4 sm:mx-0 sm:block sm:overflow-visible sm:pb-0">
-            <div className="absolute bottom-0 left-0.5 top-2 hidden w-px bg-slate-200 lg:block" />
-            <Tab.List className="grid auto-cols-auto grid-flow-col justify-start gap-x-8 gap-y-10 whitespace-nowrap px-4 sm:mx-auto sm:max-w-2xl sm:grid-cols-3 sm:px-0 sm:text-center lg:grid-flow-row lg:grid-cols-1 lg:text-left">
+            <div className="absolute top-2 bottom-0 left-0.5 hidden w-px bg-slate-200 lg:block" />
+            <Tab.List className="grid auto-cols-auto grid-flow-col justify-start gap-x-8 gap-y-10 px-4 whitespace-nowrap sm:mx-auto sm:max-w-2xl sm:grid-cols-3 sm:px-0 sm:text-center lg:grid-flow-row lg:grid-cols-1 lg:text-left">
               {({ selectedIndex }) => (
                 <>
                   {categories.map((category, index) => (
                     <div key={category.name} className="relative lg:pl-8">
                       <DiamondIcon
                         className={clsx(
-                          "absolute left-[-0.5px] top-[0.5625rem] hidden h-1.5 w-1.5 overflow-visible lg:block",
+                          "absolute top-[0.5625rem] left-[-0.5px] hidden h-1.5 w-1.5 overflow-visible lg:block",
                           index === selectedIndex
                             ? "fill-blue-600 stroke-blue-600"
                             : "fill-transparent stroke-slate-400",
@@ -245,7 +238,7 @@ export function People() {
                           className={clsx(
                             "font-mono",
                             index === selectedIndex
-                              ? "text-blue-600 font-semibold"
+                              ? "font-semibold text-blue-600"
                               : "text-slate-500",
                           )}
                         >
@@ -262,10 +255,10 @@ export function People() {
             </Tab.List>
           </div>
           <Tab.Panels className="lg:col-span-3">
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <Tab.Panel
                 key={category.name}
-                className="grid grid-cols-1 gap-x-8 gap-y-10 ui-not-focus-visible:outline-hidden sm:grid-cols-2 sm:gap-y-16 md:grid-cols-3"
+                className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 sm:gap-y-16 md:grid-cols-3 ui-not-focus-visible:outline-hidden"
                 unmount={false}
               >
                 {category.people.map((person, index) => (
@@ -274,12 +267,8 @@ export function People() {
                       <div className="group relative h-[17.5rem] transform overflow-hidden rounded-4xl">
                         <div
                           className={clsx(
-                            "absolute bottom-6 left-0 right-4 top-0 rounded-4xl border transition duration-300 group-hover:scale-95 xl:right-6",
-                            [
-                              "border-blue-300",
-                              "border-indigo-300",
-                              "border-sky-300",
-                            ][index % 3],
+                            "absolute top-0 right-4 bottom-6 left-0 rounded-4xl border transition duration-300 group-hover:scale-95 xl:right-6",
+                            ["border-blue-300", "border-indigo-300", "border-sky-300"][index % 3],
                           )}
                         />
                         <div
@@ -299,14 +288,12 @@ export function People() {
                     <h3 className="mt-8 font-display text-xl font-bold tracking-tight text-slate-900">
                       {person.name}
                       {person.instagram && (
-                        <span className="text-slate-600 font-normal text-lg pl-3">
+                        <span className="pl-3 text-lg font-normal text-slate-600">
                           <InstagramLink username={person.instagram} />
                         </span>
                       )}
                     </h3>
-                    <p className="mt-1 text-base tracking-tight text-slate-500">
-                      {person.role}
-                    </p>
+                    <p className="mt-1 text-base tracking-tight text-slate-500">{person.role}</p>
                   </div>
                 ))}
               </Tab.Panel>

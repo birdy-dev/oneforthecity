@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import clsx from "clsx";
 
 import logoImage from "@/images/brand/logo.png";
@@ -11,15 +11,10 @@ export function BackgroundImage({
   position?: "left" | "right";
 }) {
   return (
-    <div
-      className={clsx(
-        "absolute inset-0 overflow-hidden bg-indigo-50",
-        className,
-      )}
-    >
+    <div className={clsx("absolute inset-0 overflow-hidden bg-indigo-50", className)}>
       <Image
         className={clsx(
-          "absolute top-0 blur-3xl select-none pointer-events-none",
+          "pointer-events-none absolute top-0 blur-3xl select-none",
           position === "left" &&
             "left-0 translate-x-[-55%] translate-y-[-10%] sm:left-1/2 sm:translate-x-[-98%] sm:translate-y-[-6%] lg:translate-x-[-106%] xl:translate-x-[-122%]",
           position === "right" &&

@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 
 type ButtonProps =
   | React.ComponentPropsWithoutRef<typeof Link>
-  | (React.ComponentPropsWithoutRef<"button"> & { href?: undefined });
+  | (React.ComponentPropsWithoutRef<"button"> & { to: undefined });
 
 export function Button({ className, ...props }: ButtonProps) {
   className = clsx(
@@ -11,7 +11,9 @@ export function Button({ className, ...props }: ButtonProps) {
     className,
   );
 
-  return typeof props.href === "undefined"
-    ? <button className={className} {...props} />
-    : <Link className={className} {...props} />;
+  return typeof props.to === "undefined" ? (
+    <button className={className} {...props} />
+  ) : (
+    <Link className={className} {...props} />
+  );
 }

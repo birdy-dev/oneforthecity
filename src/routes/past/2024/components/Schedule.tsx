@@ -158,7 +158,7 @@ function ScheduleTabbed() {
       className="mx-auto grid max-w-2xl grid-cols-1 gap-y-6 sm:grid-cols-2 lg:hidden"
       vertical={tabOrientation === "vertical"}
     >
-      <Tab.List className="-mx-4 flex gap-x-4 gap-y-10 overflow-x-auto pb-4 pl-4 sm:mx-0 sm:flex-col sm:pb-0 sm:pl-0 sm:pr-8">
+      <Tab.List className="-mx-4 flex gap-x-4 gap-y-10 overflow-x-auto pb-4 pl-4 sm:mx-0 sm:flex-col sm:pr-8 sm:pb-0 sm:pl-0">
         {({ selectedIndex }) => (
           <>
             {schedule.map((day, dayIndex) => (
@@ -187,10 +187,7 @@ function ScheduleTabbed() {
       </Tab.List>
       <Tab.Panels>
         {schedule.map((day) => (
-          <Tab.Panel
-            key={day.dateTime}
-            className="ui-not-focus-visible:outline-hidden"
-          >
+          <Tab.Panel key={day.dateTime} className="ui-not-focus-visible:outline-hidden">
             <TimeSlots day={day} />
           </Tab.Panel>
         ))}
@@ -205,9 +202,7 @@ function DaySummary({ day }: { day: Day }) {
       <h3 className="text-2xl font-semibold tracking-tight text-blue-900">
         <time dateTime={day.dateTime}>{day.date}</time>
       </h3>
-      <p className="mt-1.5 text-base tracking-tight text-blue-900">
-        {day.summary}
-      </p>
+      <p className="mt-1.5 text-base tracking-tight text-blue-900">{day.summary}</p>
     </>
   );
 }
@@ -225,34 +220,21 @@ function TimeSlots({ day, className }: { day: Day; className?: string }) {
           key={timeSlot.start}
           aria-label={`${timeSlot.name} talking about ${timeSlot.description} at ${timeSlot.start} - ${timeSlot.end}`}
         >
-          {timeSlotIndex > 0 && (
-            <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />
-          )}
-          <h4 className="text-lg font-semibold tracking-tight text-blue-900">
-            {timeSlot.name}
-          </h4>
+          {timeSlotIndex > 0 && <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />}
+          <h4 className="text-lg font-semibold tracking-tight text-blue-900">{timeSlot.name}</h4>
           {timeSlot.description && (
-            <p className="mt-1 tracking-tight text-blue-900">
-              {timeSlot.description}
-            </p>
+            <p className="mt-1 tracking-tight text-blue-900">{timeSlot.description}</p>
           )}
           <p className="mt-1 font-mono text-sm text-slate-500">
             {timeSlot.start && (
-              <time dateTime={`${day.dateTime}T${timeSlot.start}-08:00`}>
-                {timeSlot.start}
-                {" "}
-              </time>
+              <time dateTime={`${day.dateTime}T${timeSlot.start}-08:00`}>{timeSlot.start} </time>
             )}
-            {timeSlot.end &&
-              (
-                <>
-                  -{" "}
-                  <time dateTime={`${day.dateTime}T${timeSlot.end}-08:00`}>
-                    {timeSlot.end}
-                  </time>
-                  {" "}
-                </>
-              )}
+            {timeSlot.end && (
+              <>
+                -{" "}
+                <time dateTime={`${day.dateTime}T${timeSlot.end}-08:00`}>{timeSlot.end}</time>{" "}
+              </>
+            )}
             {timeSlot.duration && ` (${timeSlot.duration})`}
           </p>
         </li>
@@ -282,12 +264,11 @@ export function Schedule() {
           <h2 className="font-display text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl">
             Schedule
           </h2>
-          <p className="mt-4 font-display text-2xl tracking-tight text-blue-900">
-          </p>
+          <p className="mt-4 font-display text-2xl tracking-tight text-blue-900"></p>
         </div>
       </Container>
       <div className="relative mt-14 sm:mt-24">
-        <BackgroundImage position="right" className="-bottom-32 -top-40" />
+        <BackgroundImage position="right" className="-top-40 -bottom-32" />
         <Container className="relative">
           <ScheduleTabbed />
           <ScheduleStatic />
