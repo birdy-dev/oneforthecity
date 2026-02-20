@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimerIndexRouteImport } from './routes/timer/index'
 import { Route as indexIndexRouteImport } from './routes/(index)/index'
-import { Route as PastTicketsIndexRouteImport } from './routes/past/tickets/index'
 
 const TimerIndexRoute = TimerIndexRouteImport.update({
   id: '/timer/',
@@ -23,40 +22,31 @@ const indexIndexRoute = indexIndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PastTicketsIndexRoute = PastTicketsIndexRouteImport.update({
-  id: '/past/tickets/',
-  path: '/past/tickets/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof indexIndexRoute
   '/timer/': typeof TimerIndexRoute
-  '/past/tickets/': typeof PastTicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof indexIndexRoute
   '/timer': typeof TimerIndexRoute
-  '/past/tickets': typeof PastTicketsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(index)/': typeof indexIndexRoute
   '/timer/': typeof TimerIndexRoute
-  '/past/tickets/': typeof PastTicketsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/timer/' | '/past/tickets/'
+  fullPaths: '/' | '/timer/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/timer' | '/past/tickets'
-  id: '__root__' | '/(index)/' | '/timer/' | '/past/tickets/'
+  to: '/' | '/timer'
+  id: '__root__' | '/(index)/' | '/timer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   indexIndexRoute: typeof indexIndexRoute
   TimerIndexRoute: typeof TimerIndexRoute
-  PastTicketsIndexRoute: typeof PastTicketsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,20 +65,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof indexIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/past/tickets/': {
-      id: '/past/tickets/'
-      path: '/past/tickets'
-      fullPath: '/past/tickets/'
-      preLoaderRoute: typeof PastTicketsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   indexIndexRoute: indexIndexRoute,
   TimerIndexRoute: TimerIndexRoute,
-  PastTicketsIndexRoute: PastTicketsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

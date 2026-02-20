@@ -10,4 +10,13 @@
       }
     }
   ],
+  "lsp": {
+    "typescript-language-server": {
+      "initialization_options": {
+        "preferences": {
+          "importModuleSpecifierPreference": "non-relative"
+        }
+      }
+    }
+  }
 }

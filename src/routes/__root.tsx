@@ -1,3 +1,4 @@
+import { NotFound } from "@/components/NotFound";
 import "@/tailwind.css";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 
@@ -38,6 +39,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootLayout,
+  notFoundComponent: NotFound,
 });
 
 function RootLayout() {

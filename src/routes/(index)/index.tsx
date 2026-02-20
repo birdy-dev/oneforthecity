@@ -4,7 +4,7 @@ import instagramIcon from "@/images/icons/instagram.svg";
 import lumaIcon from "@/images/icons/luma.png";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
-import { Banner } from "./components/Banner";
+import { Banner } from "./-components/Banner";
 
 export const Route = createFileRoute("/(index)/")({
   component: Home,
