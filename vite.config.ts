@@ -13,7 +13,16 @@ export default defineConfig({
     tsconfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tanstackStart(),
+    tanstackStart({
+      spa: {
+        enabled: true,
+        prerender: {
+          enabled: true,
+          autoSubfolderIndex: true,
+          crawlLinks: true,
+        },
+      },
+    }),
     viteReact(),
   ],
 });
