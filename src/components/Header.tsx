@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { DiamondIcon } from "@/components/DiamondIcon";
 import { Logo } from "@/components/Logo";
@@ -13,7 +12,7 @@ export function Header(props: { action?: JSX.Element }) {
         <Link to="/" className="mt-10 lg:mt-0 lg:grow lg:basis-0">
           <Logo />
         </Link>
-        <div className="order-first -mx-4 flex flex-auto basis-full overflow-x-auto border-b border-blue-600/10 py-4 font-mono text-sm whitespace-nowrap text-blue-600 sm:-mx-6 lg:order-none lg:mx-0 lg:basis-auto lg:border-0 lg:py-0">
+        <div className="order-first -mx-4 flex flex-auto basis-full overflow-x-auto border-b border-blue-600/10 py-4 font-mono text-sm whitespace-nowrap text-blue-600 sm:-mx-6 lg:order-0 lg:mx-0 lg:basis-auto lg:border-0 lg:py-0">
           <div className="mx-auto flex items-center gap-4 px-4">
             <p>
               <time dateTime="2024-06-29">June 29</time>-<time dateTime="2024-06-30">30, 2024</time>
@@ -23,7 +22,7 @@ export function Header(props: { action?: JSX.Element }) {
           </div>
         </div>
         <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
-          {props.action ?? <Button to="/past/tickets">Tickets & Registration</Button>}
+          {props.action}
         </div>
       </Container>
     </header>

@@ -24,8 +24,7 @@ export function BackgroundImage({
         alt=""
         width={918}
         height={1495}
-        priority
-        unoptimized
+        loading="eager"
       />
       <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-white" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-white" />

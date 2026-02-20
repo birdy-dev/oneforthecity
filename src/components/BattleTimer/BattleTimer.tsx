@@ -1,5 +1,3 @@
-"use client";
-
 import { Temporal } from "temporal-polyfill";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/utils/cn";

@@ -11,6 +11,7 @@ const meta = {
 
 export const Route = createRootRoute({
   head: () => ({
+    links: [{ rel: "icon", href: "/favicon.ico" }],
     meta: [
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "title", content: meta.title },
