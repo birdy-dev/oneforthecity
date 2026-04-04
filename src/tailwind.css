@@ -2,7 +2,7 @@
 @import "@fontsource-variable/dm-sans";
 @import "@fontsource-variable/inter";
 
-@plugin '@headlessui/tailwindcss';
+@plugin "@headlessui/tailwindcss";
 
 @theme inline {
   --font-dm-sans: "DM Sans Variable";

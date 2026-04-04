@@ -54,7 +54,7 @@ function Home() {
               className="aspect-video w-full rounded-xl drop-shadow-lg"
               width="800px"
               height="100%"
-              src="https://www.youtube.com/embed/kcZP775yDjU?si=s7b50zvyJF79_eBa&autoplay=1&modestbranding&rel=0"
+              src="https://www.youtube.com/embed/GsqcvCIaflQ?si=0c98Mej6GSL8i4OQ&autoplay=1&modestbranding&rel=0"
               title="YouTube one for the city battle 2024"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"

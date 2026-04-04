@@ -1,3 +1,6 @@
+import { Link } from "@tanstack/react-router";
+import { ArrowRightIcon } from "lucide-react";
+
 export function Banner() {
   return (
     <div className="relative isolate flex items-center justify-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5">
@@ -11,15 +14,13 @@ export function Banner() {
             Edmonton, Jun 26-28
           </span>
         </p>
-        <a
+        <Link
           className="flex flex-none items-center justify-center gap-1 rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-          href="https://luma.com/zbhkbwr0"
+          to="/2026"
+          // href="https://luma.com/zbhkbwr0"
         >
-          Event Page{" "}
-          <span className="block" aria-hidden="true">
-            &rarr;
-          </span>
-        </a>
+          Event Page <ArrowRightIcon size={16} />
+        </Link>
       </div>
     </div>
   );

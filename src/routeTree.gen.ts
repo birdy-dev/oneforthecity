@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimerIndexRouteImport } from './routes/timer/index'
+import { Route as R2026IndexRouteImport } from './routes/2026/index'
 import { Route as indexIndexRouteImport } from './routes/(index)/index'
 
 const TimerIndexRoute = TimerIndexRouteImport.update({
   id: '/timer/',
   path: '/timer/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R2026IndexRoute = R2026IndexRouteImport.update({
+  id: '/2026/',
+  path: '/2026/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const indexIndexRoute = indexIndexRouteImport.update({
@@ -25,27 +31,31 @@ const indexIndexRoute = indexIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof indexIndexRoute
+  '/2026/': typeof R2026IndexRoute
   '/timer/': typeof TimerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof indexIndexRoute
+  '/2026': typeof R2026IndexRoute
   '/timer': typeof TimerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(index)/': typeof indexIndexRoute
+  '/2026/': typeof R2026IndexRoute
   '/timer/': typeof TimerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/timer/'
+  fullPaths: '/' | '/2026/' | '/timer/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/timer'
-  id: '__root__' | '/(index)/' | '/timer/'
+  to: '/' | '/2026' | '/timer'
+  id: '__root__' | '/(index)/' | '/2026/' | '/timer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   indexIndexRoute: typeof indexIndexRoute
+  R2026IndexRoute: typeof R2026IndexRoute
   TimerIndexRoute: typeof TimerIndexRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/timer'
       fullPath: '/timer/'
       preLoaderRoute: typeof TimerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/2026/': {
+      id: '/2026/'
+      path: '/2026'
+      fullPath: '/2026/'
+      preLoaderRoute: typeof R2026IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(index)/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   indexIndexRoute: indexIndexRoute,
+  R2026IndexRoute: R2026IndexRoute,
   TimerIndexRoute: TimerIndexRoute,
 }
 export const routeTree = rootRouteImport
