@@ -3,6 +3,7 @@ import { People } from "./-components/people";
 import { Schedule } from "./-components/schedule";
 import { Hero } from "./-components/hero";
 import { ArrowLeft } from "lucide-react";
+import { Hotels } from "./-components/hotels";
 
 export const Route = createFileRoute("/2026/")({
   component: RouteComponent,
@@ -25,6 +26,7 @@ function RouteComponent() {
         <Hero />
         <Schedule />
         <People />
+        <Hotels />
       </div>
     </>
   );

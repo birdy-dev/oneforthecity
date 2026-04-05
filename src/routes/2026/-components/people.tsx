@@ -53,15 +53,19 @@ export function People() {
       <div className="grid w-full grid-cols-2 gap-8 md:grid-cols-4">
         {people.map((person) => (
           <div
-            className="flex w-full flex-col items-center space-y-4 p-4 text-center"
+            className="relative flex flex-col items-center overflow-clip rounded-xl transition-shadow hover:shadow"
             key={person.name}
           >
-            <img className="rounded-full" src={person.image} width={200} height={200} />
-            <div className="">
+            <div className="items-ends absolute flex w-full justify-end p-2">
+              <span className="block w-fit rounded-full bg-gray-200 px-2 text-xs text-gray-600">
+                {person.role}
+              </span>
+            </div>
+            <img className="size-full object-cover" src={person.image} width={200} height={200} />
+            <div className="w-full rounded-b-xl border-x border-b p-2 text-center">
               <h3 className="text-lg/8 font-semibold tracking-tight text-gray-900">
                 {person.name}
               </h3>
-              <p className="text-sm/6 text-gray-600">{person.role}</p>
             </div>
           </div>
         ))}
