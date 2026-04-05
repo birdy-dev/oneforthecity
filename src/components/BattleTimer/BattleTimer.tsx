@@ -1,154 +1,257 @@
 import { Temporal } from "temporal-polyfill";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
 
 const INTERVAL = 100;
 
-const changeTimeBtn = cn("size-18 cursor-pointer rounded-full border border-white text-xl");
-const btn = cn("w-30 cursor-pointer rounded-lg border border-white py-2");
+export type BattleColor = "red" | "blue" | "gold";
+
+export type TimerApi = {
+  start: () => void;
+  pause: () => void;
+  toggle: () => void;
+  reset: () => void;
+  addSeconds: (value: number) => void;
+  setTime: (minutes: number, seconds: number) => void;
+};
 
 type Props = {
   teamName?: string;
-  color?: "red" | "blue";
+  color?: BattleColor;
   disabled?: boolean;
+  focused?: boolean;
+  editing?: boolean;
   onStart?: () => void;
+  onFocus?: () => void;
+  onEditDone?: () => void;
+  onRegisterApi?: (api: TimerApi) => void;
 };
 
-export function BattleTimer(props: Props) {
-  const [teamName, setTeamName] = useState(props.teamName);
-  const [duration, setDuration] = useState(new Temporal.Duration(0, 0, 0, 0, 0, 6, 0));
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef<number>(null);
+const THEME: Record<
+  BattleColor,
+  {
+    ring: string;
+    glow: string;
+    text: string;
+    chip: string;
+    card: string;
+  }
+> = {
+  red: {
+    ring: "border-red-500",
+    glow: "shadow-[0_0_3vmin_rgba(239,68,68,0.35)]",
+    text: "text-red-400",
+    chip: "bg-red-500/15 border-red-400/60 text-red-200",
+    card: "border-red-500/25",
+  },
+  blue: {
+    ring: "border-blue-500",
+    glow: "shadow-[0_0_3vmin_rgba(59,130,246,0.35)]",
+    text: "text-blue-400",
+    chip: "bg-blue-500/15 border-blue-400/60 text-blue-200",
+    card: "border-blue-500/25",
+  },
+  gold: {
+    ring: "border-amber-400",
+    glow: "shadow-[0_0_3vmin_rgba(251,191,36,0.35)]",
+    text: "text-amber-300",
+    chip: "bg-amber-500/15 border-amber-300/60 text-amber-100",
+    card: "border-amber-500/25",
+  },
+};
 
-  const start = () => {
-    if (isRunning || duration.sign <= 0) return;
+function initialDuration() {
+  return new Temporal.Duration(0, 0, 0, 0, 0, 6, 0);
+}
+
+function zeroDuration() {
+  return new Temporal.Duration(0, 0, 0, 0, 0, 0, 0);
+}
+
+export function BattleTimer({
+  teamName: initialTeamName,
+  color = "red",
+  disabled,
+  focused = false,
+  editing = false,
+  onStart,
+  onFocus,
+  onEditDone,
+  onRegisterApi,
+}: Props) {
+  const [teamName, setTeamName] = useState(initialTeamName);
+  const [duration, setDuration] = useState(initialDuration());
+  const [isRunning, setIsRunning] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  const palette = useMemo(() => THEME[color], [color]);
+
+  const clearIntervalRef = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  // Refs so the API object always calls the latest closures
+  const isRunningRef = useRef(isRunning);
+  isRunningRef.current = isRunning;
+  const durationRef = useRef(duration);
+  durationRef.current = duration;
+  const onStartRef = useRef(onStart);
+  onStartRef.current = onStart;
+
+  const pause = useCallback(() => {
+    clearIntervalRef();
+    setIsRunning(false);
+  }, [clearIntervalRef]);
+
+  const start = useCallback(() => {
+    if (isRunningRef.current || durationRef.current.sign <= 0) return;
+    onStartRef.current?.();
     setIsRunning(true);
-    props.onStart?.();
+    clearIntervalRef();
 
     timerRef.current = window.setInterval(() => {
       setDuration((prev) => {
-        if (timerRef.current && prev.sign <= 0) {
-          clearInterval(timerRef.current);
+        const next = prev.subtract({ milliseconds: INTERVAL });
+        if (next.sign <= 0) {
+          clearIntervalRef();
           setIsRunning(false);
-          return new Temporal.Duration();
+          return zeroDuration();
         }
-        return prev.subtract({ milliseconds: INTERVAL });
+        return next;
       });
     }, INTERVAL);
-  };
+  }, [clearIntervalRef]);
 
-  const pause = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      setIsRunning(false);
-    }
-  };
+  const toggle = useCallback(() => {
+    if (isRunningRef.current) pause();
+    else start();
+  }, [pause, start]);
 
-  const reset = () => {
-    setDuration(new Temporal.Duration(0, 0, 0, 0, 0, 0, 0));
+  const reset = useCallback(() => {
     pause();
-  };
+    setDuration(zeroDuration());
+  }, [pause]);
 
-  const setTime = ({ minutes = 0, seconds = 0 }: { minutes?: number; seconds?: number }) => {
+  const addSeconds = useCallback((seconds: number) => {
     setDuration((prev) => {
-      const result = prev.add(new Temporal.Duration(0, 0, 0, 0, 0, minutes, seconds, 0));
-      if (result.sign <= 0) return new Temporal.Duration(0, 0, 0, 0, 0, 0, 0);
-
-      return result;
+      const next = prev
+        .add(new Temporal.Duration(0, 0, 0, 0, 0, 0, seconds, 0))
+        .round({ largestUnit: "minute" });
+      return next.sign <= 0 ? zeroDuration() : next;
     });
-  };
-
-  const changeTeamName = () => {
-    const name = window.prompt("Enter team name");
-    if (name) {
-      setTeamName(name);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
   }, []);
 
-  useEffect(() => {
-    if (props.disabled) {
-      return pause();
-    }
+  const setTime = useCallback((minutes: number, seconds: number) => {
+    setDuration(new Temporal.Duration(0, 0, 0, 0, 0, minutes, seconds, 0));
+  }, []);
 
-    start();
-  }, [props.disabled]);
+  // Register the API so the parent can drive this timer via hotkeys
+  useEffect(() => {
+    onRegisterApi?.({ start, pause, toggle, reset, addSeconds, setTime });
+  }, [onRegisterApi, start, pause, toggle, reset, addSeconds, setTime]);
+
+  const changeTeamName = () => {
+    const name = window.prompt("Enter team/crew name");
+    if (name) setTeamName(name);
+  };
+
+  useEffect(() => () => clearIntervalRef(), [clearIntervalRef]);
+  useEffect(() => {
+    if (disabled) pause();
+  }, [disabled, pause]);
+
+  const minute = duration.minutes.toString().padStart(1, "0");
+  const second = duration.seconds.toString().padStart(2, "0");
+  const tenth = Math.floor(duration.milliseconds / 100).toString();
 
   return (
-    <div className="flex max-w-lg flex-col items-center gap-14 py-4">
-      <div>
-        <div className="flex gap-4">
-          <button className={changeTimeBtn} type="button" onClick={() => setTime({ seconds: 5 })}>
-            +5s
-          </button>
-          <button className={changeTimeBtn} type="button" onClick={() => setTime({ seconds: 30 })}>
-            +30s
-          </button>
-
-          <button className={changeTimeBtn} type="button" onClick={() => setTime({ minutes: 1 })}>
-            +1m
-          </button>
-        </div>
-      </div>
-
+    <article
+      className={cn(
+        "flex w-full items-center justify-center p-[2vmin] transition-all duration-150",
+        focused ? "opacity-100" : "opacity-70",
+      )}
+      onMouseDown={onFocus}
+    >
       <div
         className={cn(
-          "relative flex size-[500px] items-center justify-center rounded-full",
-          props.color === "red" ? "border-4  border-red-600" : "border-3 border-blue-600",
+          "@container relative flex aspect-square w-full max-w-[min(85vh,85vw)] items-center justify-center rounded-full border-[3px] bg-black/70",
+          palette.ring,
+          palette.glow,
+          focused && "ring-2 ring-white/20 ring-offset-2 ring-offset-black",
         )}
       >
+        {/* Inner decorative ring */}
+        <div className="pointer-events-none absolute inset-[0.5vmin] rounded-full border border-white/10" />
+
+        {/* Team name chip */}
         <button
-          className={cn(
-            "absolute top-20 cursor-pointer text-3xl",
-            props.color === "red" ? "font-medium text-red-600" : "text-blue-600",
-          )}
-          onClick={() => changeTeamName()}
           type="button"
-        >
-          {teamName}
-        </button>
-        <span className="font-mono text-7xl">
-          {duration.minutes.toString().padStart(1, "0")}m{" "}
-          {duration.seconds.toString().padStart(2, "0")}.
-          {(duration.milliseconds / 100).toString().padEnd(1, "0")}s
-        </span>
-        <div className="absolute bottom-20 flex items-center justify-center gap-4" id="controls">
-          {isRunning ? (
-            <button className={btn} type="button" onClick={pause}>
-              Pause
-            </button>
-          ) : (
-            <button className={btn} type="button" onClick={start}>
-              Start
-            </button>
+          className={cn(
+            "absolute top-[8%] rounded-full border px-[1.5cqi] py-[0.4cqi] text-[clamp(0.5rem,2.5cqi,1.1rem)] font-black tracking-[0.14em] uppercase transition-colors",
+            palette.chip,
           )}
-        </div>
-      </div>
-
-      <div className="flex gap-4">
-        <button className={changeTimeBtn} type="button" onClick={() => setTime({ seconds: -5 })}>
-          -5s
-        </button>
-        <button className={changeTimeBtn} type="button" onClick={() => setTime({ seconds: -30 })}>
-          -30s
+          onClick={changeTeamName}
+        >
+          {teamName ?? "Crew"}
         </button>
 
-        <button className={changeTimeBtn} type="button" onClick={() => setTime({ minutes: -1 })}>
-          -1m
-        </button>
+        {/* Time display / inline edit */}
+        {editing ? (
+          <input
+            type="text"
+            autoFocus
+            placeholder={`${minute}:${second}`}
+            className={cn(
+              "w-[60%] bg-transparent text-center font-mono font-black outline-none",
+              "text-[clamp(1rem,12cqi,7rem)]",
+              "border-b-2 border-current",
+              palette.text,
+            )}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                onEditDone?.();
+                return;
+              }
+              if (e.key === "Enter") {
+                const raw = (e.target as HTMLInputElement).value.trim();
+                const parts = raw.split(":");
+                const min = Number.parseInt(parts[0] ?? "", 10);
+                const sec = parts.length > 1 ? Number.parseInt(parts[1] ?? "", 10) : 0;
+                if (!Number.isNaN(min) && !Number.isNaN(sec) && min >= 0 && sec >= 0) {
+                  setTime(min, sec);
+                }
+                onEditDone?.();
+              }
+            }}
+            onBlur={() => onEditDone?.()}
+          />
+        ) : (
+          <span
+            className={cn(
+              "font-mono font-black whitespace-nowrap",
+              "text-[clamp(1rem,12cqi,7rem)]",
+              palette.text,
+            )}
+          >
+            {minute}m {second}.{tenth}s
+          </span>
+        )}
+
+        {/* Running indicator */}
+        {isRunning && (
+          <div
+            className={cn(
+              "absolute bottom-[8%] rounded-full px-[1.5cqi] py-[0.3cqi] text-[clamp(0.45rem,2cqi,0.9rem)] font-bold uppercase tracking-widest",
+              palette.chip,
+            )}
+          >
+            Running
+          </div>
+        )}
       </div>
-      <div className="flex items-center justify-center">
-        <button className={btn} type="button" onClick={reset}>
-          CLEAR
-        </button>
-      </div>
-    </div>
+    </article>
   );
 }
