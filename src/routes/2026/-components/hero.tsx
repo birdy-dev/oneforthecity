@@ -1,10 +1,11 @@
 import { CalendarIcon, DotIcon, MapPinIcon } from "lucide-react";
-import posterJpg from "./poster.jpg?url";
+import videoWebm from "./video_loop_opt.webm?url";
+import videoMp4 from "./video_loop_opt.mp4?url";
 
 export function Hero() {
   return (
     <section
-      className="mx-auto flex max-w-5xl flex-col justify-between gap-16 md:flex-row"
+      className="mx-auto flex max-w-5xl flex-col justify-between gap-16 md:flex-row md:items-center"
       id="hero"
     >
       <div className="order-1 space-y-16">
@@ -49,8 +50,19 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="md:order-2">
-        <img className="rounded-2xl" src={posterJpg} width={300} height={400} />
+      <div className="mx-auto md:order-2 md:mx-0 md:shrink-0">
+        <video
+          className="rounded-2xl md:max-h-125 md:w-auto md:object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+          width={300}
+          height={480}
+        >
+          <source src={videoWebm} type="video/webm" />
+          <source src={videoMp4} type="video/mp4" />
+        </video>
       </div>
     </section>
   );

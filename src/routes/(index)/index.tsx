@@ -5,6 +5,7 @@ import lumaIcon from "@/images/icons/luma.png";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { Banner } from "./-components/Banner";
+import { Gallery } from "./-components/Gallery";
 
 export const Route = createFileRoute("/(index)/")({
   component: Home,
@@ -78,6 +79,8 @@ function Home() {
               three years.
             </p>
           </div>
+
+          <Gallery />
         </Container>
 
         <Container>
