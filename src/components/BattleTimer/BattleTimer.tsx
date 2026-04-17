@@ -244,7 +244,7 @@ export function BattleTimer({
         {isRunning && (
           <div
             className={cn(
-              "absolute bottom-[8%] rounded-full px-[1.5cqi] py-[0.3cqi] text-[clamp(0.45rem,2cqi,0.9rem)] font-bold uppercase tracking-widest",
+              "absolute bottom-[8%] rounded-full px-[1.5cqi] py-[0.3cqi] text-[clamp(0.45rem,2cqi,0.9rem)] font-bold tracking-widest uppercase",
               palette.chip,
             )}
           >

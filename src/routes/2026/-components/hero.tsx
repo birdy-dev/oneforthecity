@@ -16,7 +16,9 @@ export function Hero() {
           <h1 className="text-4xl font-bold tracking-tight uppercase md:text-6xl">
             One for
             <br />
-            the City 6
+            the City
+            <br />
+            <span className="line-clamp-1 text-3xl md:text-5xl">Vol. 6</span>
           </h1>
           <p className="inline-flex flex-wrap items-center px-1 text-sm font-medium text-gray-500 md:text-base">
             Breaking
@@ -50,9 +52,9 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="mx-auto md:order-2 md:mx-0 md:shrink-0">
+      <div className="mx-auto aspect-square w-full max-w-75 overflow-hidden rounded-2xl md:order-2 md:mx-0 md:aspect-auto md:w-auto md:max-w-none md:shrink-0 md:overflow-visible">
         <video
-          className="rounded-2xl md:max-h-125 md:w-auto md:object-cover"
+          className="h-full w-full object-cover object-center md:h-auto md:max-h-125 md:w-auto md:rounded-2xl"
           autoPlay
           loop
           muted

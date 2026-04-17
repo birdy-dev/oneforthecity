@@ -7,7 +7,7 @@ import { Image } from "@unpic/react";
 import { Banner } from "./-components/Banner";
 import { Gallery } from "./-components/Gallery";
 
-export const Route = createFileRoute("/(index)/")({
+export const Route = createFileRoute("/home/")({
   component: Home,
 });
 

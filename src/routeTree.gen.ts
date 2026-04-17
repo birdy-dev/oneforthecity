@@ -9,13 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as TimerIndexRouteImport } from './routes/timer/index'
+import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as R2026IndexRouteImport } from './routes/2026/index'
-import { Route as indexIndexRouteImport } from './routes/(index)/index'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TimerIndexRoute = TimerIndexRouteImport.update({
   id: '/timer/',
   path: '/timer/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeIndexRoute = HomeIndexRouteImport.update({
+  id: '/home/',
+  path: '/home/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const R2026IndexRoute = R2026IndexRouteImport.update({
@@ -23,49 +34,62 @@ const R2026IndexRoute = R2026IndexRouteImport.update({
   path: '/2026/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const indexIndexRoute = indexIndexRouteImport.update({
-  id: '/(index)/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof indexIndexRoute
+  '/': typeof IndexRoute
   '/2026/': typeof R2026IndexRoute
+  '/home/': typeof HomeIndexRoute
   '/timer/': typeof TimerIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof indexIndexRoute
+  '/': typeof IndexRoute
   '/2026': typeof R2026IndexRoute
+  '/home': typeof HomeIndexRoute
   '/timer': typeof TimerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/(index)/': typeof indexIndexRoute
+  '/': typeof IndexRoute
   '/2026/': typeof R2026IndexRoute
+  '/home/': typeof HomeIndexRoute
   '/timer/': typeof TimerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/2026/' | '/timer/'
+  fullPaths: '/' | '/2026/' | '/home/' | '/timer/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/2026' | '/timer'
-  id: '__root__' | '/(index)/' | '/2026/' | '/timer/'
+  to: '/' | '/2026' | '/home' | '/timer'
+  id: '__root__' | '/' | '/2026/' | '/home/' | '/timer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  indexIndexRoute: typeof indexIndexRoute
+  IndexRoute: typeof IndexRoute
   R2026IndexRoute: typeof R2026IndexRoute
+  HomeIndexRoute: typeof HomeIndexRoute
   TimerIndexRoute: typeof TimerIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/timer/': {
       id: '/timer/'
       path: '/timer'
       fullPath: '/timer/'
       preLoaderRoute: typeof TimerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home/': {
+      id: '/home/'
+      path: '/home'
+      fullPath: '/home/'
+      preLoaderRoute: typeof HomeIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/2026/': {
@@ -75,19 +99,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R2026IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(index)/': {
-      id: '/(index)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof indexIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  indexIndexRoute: indexIndexRoute,
+  IndexRoute: IndexRoute,
   R2026IndexRoute: R2026IndexRoute,
+  HomeIndexRoute: HomeIndexRoute,
   TimerIndexRoute: TimerIndexRoute,
 }
 export const routeTree = rootRouteImport

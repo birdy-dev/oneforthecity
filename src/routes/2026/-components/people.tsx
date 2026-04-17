@@ -10,10 +10,9 @@ type Person = {
 
 const people: Person[] = [
   {
-    // name: "Nobunaga",
-    name: "TBA",
+    name: "Nobunaga",
     role: "DJ",
-    image: unknownImage,
+    image: nobunagaImage,
     instagram: "https://www.instagram.com/nobunagalewing",
   },
   {
