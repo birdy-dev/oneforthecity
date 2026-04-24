@@ -1,10 +1,22 @@
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    luma?: {
+      initCheckout?: () => void;
+    };
+  }
+}
+
 export function TicketBar() {
   useEffect(() => {
     const scriptId = "luma-checkout";
+    const initCheckout = () => window.luma?.initCheckout?.();
 
-    if (document.getElementById(scriptId)) {
+    const existingScript = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    if (existingScript) {
+      initCheckout();
       return;
     }
 
@@ -12,13 +24,8 @@ export function TicketBar() {
     script.id = scriptId;
     script.src = "https://embed.lu.ma/checkout-button.js";
     script.async = true;
+    script.onload = initCheckout;
     document.body.appendChild(script);
-
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
   }, []);
 
   return (
