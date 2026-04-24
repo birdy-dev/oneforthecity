@@ -47,7 +47,7 @@ export function TicketBar() {
           </a>
         </div>
 
-        <div className="min-w-0">
+        {/*<div className="min-w-0">
           <div className="pb-2 text-center text-[11px] font-semibold tracking-[0.18em] text-gray-600 uppercase">
             Tickets
           </div>
@@ -65,7 +65,7 @@ export function TicketBar() {
               Day 2
             </a>
           </div>
-        </div>
+        </div>*/}
       </div>
     </div>
   );
