@@ -1,6 +1,7 @@
 import { NotFound } from "@/components/NotFound";
 import "@/tailwind.css";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { GoogleAnalytics } from "tanstack-router-ga4";
 
 const meta = {
   title: "One for the City",
@@ -50,6 +51,7 @@ function RootLayout() {
         <HeadContent />
       </head>
       <body className="flex min-h-full">
+        <GoogleAnalytics measurementId="G-GFNRPPPC84" />
         <div className="flex w-full flex-col">
           <Outlet />
         </div>
