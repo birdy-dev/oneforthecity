@@ -62,7 +62,12 @@ export function People() {
                 {person.role}
               </span>
             </div>
-            <img className="size-full object-cover" src={person.image} width={200} height={200} />
+            <img
+              className="aspect-square size-full object-cover object-top"
+              src={person.image}
+              width={200}
+              height={200}
+            />
             <div className="w-full rounded-b-xl border-x border-b p-2 text-center">
               <h3 className="text-lg/8 font-semibold tracking-tight text-gray-900">
                 {person.name}
