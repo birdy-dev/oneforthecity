@@ -76,7 +76,6 @@ function Card({ hotel }: { hotel: Hotel }) {
             aria-hidden="true"
             className="absolute inset-x-0 bottom-0 h-36 bg-linear-to-t from-black opacity-50"
           ></div>
-          <p className="relative text-lg font-semibold text-white">{hotel.price}</p>
         </div>
       </div>
     </div>
