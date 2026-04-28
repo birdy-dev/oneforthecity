@@ -49,6 +49,8 @@ export function TicketBar() {
             <a
               className="inline-flex flex-1 items-center justify-center bg-indigo-50 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-indigo-100 focus-visible:outline-none sm:px-6"
               href="https://www.ticketweb.ca/event/one-for-the-city-pawn-shop-live-formally-known-tickets/14839363?pl=PawnShopLive"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Spectator Tickets
             </a>
