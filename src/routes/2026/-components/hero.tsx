@@ -1,5 +1,4 @@
 import { CalendarIcon, DotIcon, MapPinIcon } from "lucide-react";
-import videoWebm from "./video_loop_opt.webm?url";
 import videoMp4 from "./video_loop_opt.mp4?url";
 
 export function Hero() {
@@ -62,7 +61,6 @@ export function Hero() {
           width={300}
           height={480}
         >
-          <source src={videoWebm} type="video/webm" />
           <source src={videoMp4} type="video/mp4" />
         </video>
       </div>
