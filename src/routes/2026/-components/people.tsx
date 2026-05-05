@@ -1,5 +1,6 @@
 import nobunagaImage from "./nobunaga.jpg?url";
 import stormImage from "./storm.jpg?url";
+import rubixImage from "./rubix.jpg?url";
 import unknownImage from "@/images/avatars/unknown.png?url";
 
 type Person = {
@@ -29,10 +30,10 @@ const people: Person[] = [
     instagram: "https://www.instagram.com/storm_serious",
   },
   {
-    name: "TBA",
+    name: "Rubix",
     role: "Judge",
-    image: unknownImage,
-    instagram: "",
+    image: rubixImage,
+    instagram: "https://www.instagram.com/rubix_criminalz",
   },
   {
     name: "TBA",
