@@ -64,7 +64,7 @@ export function People() {
               </span>
             </div>
             <img
-              className="aspect-square size-full object-cover object-top"
+              className="aspect-square size-full object-cover object-top grayscale"
               src={person.image}
               width={200}
               height={200}

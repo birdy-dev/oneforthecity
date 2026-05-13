@@ -1,3 +1,4 @@
+import { TicketIcon, UserPlusIcon } from "lucide-react";
 import { useEffect } from "react";
 
 declare global {
@@ -40,6 +41,7 @@ export function TicketBar() {
             data-luma-action="checkout"
             data-luma-event-id="evt-g8NXPtx9gvq9MaF"
           >
+            <UserPlusIcon className="mr-2" size={16} />
             Crew Registration
           </a>
         </div>
@@ -47,11 +49,12 @@ export function TicketBar() {
         <div className="min-w-0">
           <div className="flex flex-nowrap overflow-clip rounded-full whitespace-nowrap">
             <a
-              className="inline-flex flex-1 items-center justify-center bg-indigo-50 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-indigo-100 focus-visible:outline-none sm:px-6"
+              className="inline-flex w-full items-center justify-center rounded-full bg-gray-900 px-5 py-2 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline-none sm:px-8"
               href="https://www.ticketweb.ca/event/one-for-the-city-pawn-shop-live-formally-known-tickets/14839363"
               target="_blank"
               rel="noopener noreferrer"
             >
+              <TicketIcon className="mr-2" size={16} />
               Spectator Tickets
             </a>
           </div>
