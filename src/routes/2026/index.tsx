@@ -25,17 +25,17 @@ function RouteComponent() {
 
         <div className="flex gap-2">
           <a
-            className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-xs hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:px-3.5"
+            className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:px-3.5"
             href="https://www.youtube.com/@oneforthecity"
           >
-            <BrandYoutube size={24} />
+            <BrandYoutube size={28} />
             <span className="hidden sm:block">YouTube</span>
           </a>
           <a
-            className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-xs hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:px-3.5"
+            className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:px-3.5"
             href="https://www.instagram.com/oneforthecity"
           >
-            <BrandInstagram size={24} />
+            <BrandInstagram size={28} />
             <span className="hidden sm:block">Instagram</span>
           </a>
         </div>
