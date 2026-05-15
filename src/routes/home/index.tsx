@@ -32,7 +32,7 @@ function Home() {
               href="https://lu.ma/oneforthecity"
             >
               <Image className="inline size-6" src={lumaIcon} alt="Luma" height={24} width={24} />
-              <span className="text-center">Events on Luma calendar</span>
+              <span className="text-center">Upcoming events</span>
             </a>
 
             <a
@@ -46,7 +46,7 @@ function Home() {
                 height={24}
                 width={24}
               />
-              <span className="text-center">Follow on Instagram @oneforthecity</span>
+              <span className="text-center">Instagram @oneforthecity</span>
             </a>
           </div>
 
