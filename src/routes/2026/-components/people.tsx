@@ -1,6 +1,7 @@
 import nobunagaImage from "./nobunaga.jpg?url";
 import stormImage from "./storm.jpg?url";
 import rubixImage from "./rubix.jpg?url";
+import ladycImage from "./ladyc.jpg?url";
 import unknownImage from "@/images/avatars/unknown.png?url";
 
 type Person = {
@@ -36,6 +37,12 @@ const people: Person[] = [
     instagram: "https://www.instagram.com/rubix_criminalz",
   },
   {
+    name: "Lady C",
+    role: "Judge",
+    image: ladycImage,
+    instagram: "https://www.instagram.com/carolineladyc",
+  },
+  {
     name: "TBA",
     role: "Judge",
     image: unknownImage,
@@ -58,7 +65,7 @@ export function People() {
             className="relative flex flex-col items-center overflow-clip rounded-xl transition-shadow hover:shadow"
             key={person.name}
           >
-            <div className="items-ends absolute flex w-full justify-end p-2">
+            <div className="items-ends absolute z-10 flex w-full justify-end p-2">
               <span className="block w-fit rounded-full bg-gray-200 px-2 text-xs text-gray-600">
                 {person.role}
               </span>
