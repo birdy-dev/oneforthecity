@@ -96,7 +96,7 @@ export function TicketBar() {
   );
 
   return (
-    <div className="fixed inset-x-0 bottom-6 z-50 px-3 sm:px-3">
+    <div className="fixed inset-x-0 bottom-2 z-50 px-3 sm:px-3">
       <div className="mx-auto flex w-full max-w-sm flex-col gap-3 sm:w-fit sm:max-w-none">
         <div className="flex justify-center sm:hidden">
           <button
