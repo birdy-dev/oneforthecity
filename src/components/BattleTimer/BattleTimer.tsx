@@ -2,7 +2,8 @@ import { Temporal } from "temporal-polyfill";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
 
-const INTERVAL = 100;
+const DISPLAY_INTERVAL = 100;
+const DEFAULT_DURATION_MS = 6 * 60 * 1000;
 
 export type BattleColor = "red" | "blue" | "gold";
 
@@ -16,6 +17,9 @@ export type TimerApi = {
 };
 
 type Props = {
+  storageKey: string;
+  persistenceReady?: boolean;
+  shouldRestoreRunning?: boolean;
   teamName?: string;
   color?: BattleColor;
   disabled?: boolean;
@@ -24,7 +28,15 @@ type Props = {
   onStart?: () => void;
   onFocus?: () => void;
   onEditDone?: () => void;
+  onRunningChange?: (running: boolean) => void;
   onRegisterApi?: (api: TimerApi) => void;
+};
+
+type PersistedTimerState = {
+  teamName?: string;
+  remainingMs: number;
+  endTimeMs: number | null;
+  isRunning: boolean;
 };
 
 const THEME: Record<
@@ -60,15 +72,27 @@ const THEME: Record<
   },
 };
 
-function initialDuration() {
-  return new Temporal.Duration(0, 0, 0, 0, 0, 6, 0);
+function initialDurationMs() {
+  return DEFAULT_DURATION_MS;
 }
 
-function zeroDuration() {
-  return new Temporal.Duration(0, 0, 0, 0, 0, 0, 0);
+function clampRemainingMs(value: number) {
+  return Math.max(0, value);
+}
+
+function nowMs() {
+  return Temporal.Now.instant().epochMilliseconds;
+}
+
+function getRemainingMs(endTimeMs: number | null) {
+  if (endTimeMs === null) return 0;
+  return clampRemainingMs(endTimeMs - nowMs());
 }
 
 export function BattleTimer({
+  storageKey,
+  persistenceReady = false,
+  shouldRestoreRunning = false,
   teamName: initialTeamName,
   color = "red",
   disabled,
@@ -77,18 +101,22 @@ export function BattleTimer({
   onStart,
   onFocus,
   onEditDone,
+  onRunningChange,
   onRegisterApi,
 }: Props) {
   const [teamName, setTeamName] = useState(initialTeamName);
-  const [duration, setDuration] = useState(initialDuration());
+  const [remainingMs, setRemainingMs] = useState(initialDurationMs());
   const [isRunning, setIsRunning] = useState(false);
+  const [endTimeMsState, setEndTimeMsState] = useState<number | null>(null);
   const timerRef = useRef<number | null>(null);
+  const endTimeMsRef = useRef<number | null>(null);
+  const hasHydratedRef = useRef(false);
 
   const palette = useMemo(() => THEME[color], [color]);
 
-  const clearIntervalRef = useCallback(() => {
+  const clearTimerRef = useCallback(() => {
     if (timerRef.current !== null) {
-      window.clearInterval(timerRef.current);
+      window.clearTimeout(timerRef.current);
       timerRef.current = null;
     }
   }, []);
@@ -96,57 +124,135 @@ export function BattleTimer({
   // Refs so the API object always calls the latest closures
   const isRunningRef = useRef(isRunning);
   isRunningRef.current = isRunning;
-  const durationRef = useRef(duration);
-  durationRef.current = duration;
+
+  const remainingMsRef = useRef(remainingMs);
+  remainingMsRef.current = remainingMs;
+
+  const teamNameRef = useRef(teamName);
+  teamNameRef.current = teamName;
+
+  const disabledRef = useRef(disabled);
+  disabledRef.current = disabled;
+
   const onStartRef = useRef(onStart);
   onStartRef.current = onStart;
 
+  const onRunningChangeRef = useRef(onRunningChange);
+  onRunningChangeRef.current = onRunningChange;
+
+  const commitRemainingMs = useCallback((value: number) => {
+    remainingMsRef.current = value;
+    setRemainingMs(value);
+  }, []);
+
+  const commitIsRunning = useCallback((value: boolean) => {
+    isRunningRef.current = value;
+    setIsRunning(value);
+  }, []);
+
+  const commitEndTimeMs = useCallback((value: number | null) => {
+    endTimeMsRef.current = value;
+    setEndTimeMsState(value);
+  }, []);
+
+  const finish = useCallback(() => {
+    clearTimerRef();
+    commitEndTimeMs(null);
+    commitRemainingMs(0);
+    commitIsRunning(false);
+    onRunningChangeRef.current?.(false);
+  }, [clearTimerRef, commitEndTimeMs, commitIsRunning, commitRemainingMs]);
+
+  const scheduleTick = useCallback(() => {
+    clearTimerRef();
+
+    if (!isRunningRef.current || endTimeMsRef.current === null) return;
+
+    const tick = () => {
+      const next = getRemainingMs(endTimeMsRef.current);
+      commitRemainingMs(next);
+
+      if (next <= 0) {
+        finish();
+        return;
+      }
+
+      timerRef.current = window.setTimeout(tick, Math.min(DISPLAY_INTERVAL, next));
+    };
+
+    tick();
+  }, [clearTimerRef, commitRemainingMs, finish]);
+
   const pause = useCallback(() => {
-    clearIntervalRef();
-    setIsRunning(false);
-  }, [clearIntervalRef]);
+    if (!isRunningRef.current) return;
+
+    const next = getRemainingMs(endTimeMsRef.current);
+    clearTimerRef();
+    commitEndTimeMs(null);
+    commitRemainingMs(next);
+    commitIsRunning(false);
+    onRunningChangeRef.current?.(false);
+  }, [clearTimerRef, commitEndTimeMs, commitIsRunning, commitRemainingMs]);
 
   const start = useCallback(() => {
-    if (isRunningRef.current || durationRef.current.sign <= 0) return;
-    onStartRef.current?.();
-    setIsRunning(true);
-    clearIntervalRef();
+    if (disabledRef.current || isRunningRef.current || remainingMsRef.current <= 0) return;
 
-    timerRef.current = window.setInterval(() => {
-      setDuration((prev) => {
-        const next = prev.subtract({ milliseconds: INTERVAL });
-        if (next.sign <= 0) {
-          clearIntervalRef();
-          setIsRunning(false);
-          return zeroDuration();
-        }
-        return next;
-      });
-    }, INTERVAL);
-  }, [clearIntervalRef]);
+    commitEndTimeMs(nowMs() + remainingMsRef.current);
+    commitIsRunning(true);
+    onStartRef.current?.();
+    onRunningChangeRef.current?.(true);
+    scheduleTick();
+  }, [commitEndTimeMs, commitIsRunning, scheduleTick]);
 
   const toggle = useCallback(() => {
     if (isRunningRef.current) pause();
     else start();
   }, [pause, start]);
 
+  const updateRemainingMs = useCallback(
+    (updater: (current: number) => number) => {
+      const current = isRunningRef.current
+        ? getRemainingMs(endTimeMsRef.current)
+        : remainingMsRef.current;
+      const next = clampRemainingMs(updater(current));
+
+      if (!isRunningRef.current) {
+        commitRemainingMs(next);
+        return;
+      }
+
+      if (next <= 0) {
+        finish();
+        return;
+      }
+
+      commitEndTimeMs(nowMs() + next);
+      commitRemainingMs(next);
+      scheduleTick();
+    },
+    [commitEndTimeMs, commitRemainingMs, finish, scheduleTick],
+  );
+
   const reset = useCallback(() => {
-    pause();
-    setDuration(zeroDuration());
-  }, [pause]);
+    if (isRunningRef.current) {
+      pause();
+    }
+    commitRemainingMs(0);
+  }, [commitRemainingMs, pause]);
 
-  const addSeconds = useCallback((seconds: number) => {
-    setDuration((prev) => {
-      const next = prev
-        .add(new Temporal.Duration(0, 0, 0, 0, 0, 0, seconds, 0))
-        .round({ largestUnit: "minute" });
-      return next.sign <= 0 ? zeroDuration() : next;
-    });
-  }, []);
+  const addSeconds = useCallback(
+    (seconds: number) => {
+      updateRemainingMs((current) => current + seconds * 1000);
+    },
+    [updateRemainingMs],
+  );
 
-  const setTime = useCallback((minutes: number, seconds: number) => {
-    setDuration(new Temporal.Duration(0, 0, 0, 0, 0, minutes, seconds, 0));
-  }, []);
+  const setTime = useCallback(
+    (minutes: number, seconds: number) => {
+      updateRemainingMs(() => (minutes * 60 + seconds) * 1000);
+    },
+    [updateRemainingMs],
+  );
 
   // Register the API so the parent can drive this timer via hotkeys
   useEffect(() => {
@@ -158,14 +264,109 @@ export function BattleTimer({
     if (name) setTeamName(name);
   };
 
-  useEffect(() => () => clearIntervalRef(), [clearIntervalRef]);
+  useEffect(() => {
+    if (!persistenceReady) return;
+
+    try {
+      const raw = window.localStorage.getItem(storageKey);
+      if (!raw) return;
+
+      const persisted = JSON.parse(raw) as Partial<PersistedTimerState>;
+      const nextTeamName = persisted.teamName ?? initialTeamName;
+      const persistedEndTimeMs =
+        typeof persisted.endTimeMs === "number" ? persisted.endTimeMs : null;
+      const persistedWasRunning = persisted.isRunning === true && persistedEndTimeMs !== null;
+      const nextRemainingMs = clampRemainingMs(
+        persistedWasRunning
+          ? persistedEndTimeMs - nowMs()
+          : typeof persisted.remainingMs === "number"
+            ? persisted.remainingMs
+            : initialDurationMs(),
+      );
+      const shouldResume =
+        persistedWasRunning && nextRemainingMs > 0 && shouldRestoreRunning && !disabledRef.current;
+
+      teamNameRef.current = nextTeamName;
+      setTeamName(nextTeamName);
+      commitRemainingMs(nextRemainingMs);
+
+      if (shouldResume) {
+        commitEndTimeMs(persistedEndTimeMs);
+        commitIsRunning(true);
+        onRunningChangeRef.current?.(true);
+        scheduleTick();
+      } else {
+        commitEndTimeMs(null);
+        commitIsRunning(false);
+        onRunningChangeRef.current?.(false);
+      }
+    } catch {
+      commitEndTimeMs(null);
+      commitIsRunning(false);
+    } finally {
+      hasHydratedRef.current = true;
+    }
+  }, [
+    commitEndTimeMs,
+    commitIsRunning,
+    commitRemainingMs,
+    initialTeamName,
+    persistenceReady,
+    scheduleTick,
+    shouldRestoreRunning,
+    storageKey,
+  ]);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+
+    const snapshot: PersistedTimerState = {
+      teamName: teamNameRef.current,
+      remainingMs: isRunningRef.current
+        ? getRemainingMs(endTimeMsRef.current)
+        : remainingMsRef.current,
+      endTimeMs: endTimeMsRef.current,
+      isRunning: isRunningRef.current,
+    };
+
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(snapshot));
+    } catch {
+      // Ignore storage write failures
+    }
+  }, [endTimeMsState, isRunning, isRunning ? 0 : remainingMs, storageKey, teamName]);
+
+  useEffect(() => () => clearTimerRef(), [clearTimerRef]);
+
   useEffect(() => {
     if (disabled) pause();
   }, [disabled, pause]);
 
-  const minute = duration.minutes.toString().padStart(1, "0");
-  const second = duration.seconds.toString().padStart(2, "0");
-  const tenth = Math.floor(duration.milliseconds / 100).toString();
+  useEffect(() => {
+    const syncTimerWithVisibility = () => {
+      if (!isRunningRef.current) return;
+
+      if (document.visibilityState === "visible") {
+        scheduleTick();
+        return;
+      }
+
+      clearTimerRef();
+    };
+
+    document.addEventListener("visibilitychange", syncTimerWithVisibility);
+    window.addEventListener("focus", syncTimerWithVisibility);
+
+    return () => {
+      document.removeEventListener("visibilitychange", syncTimerWithVisibility);
+      window.removeEventListener("focus", syncTimerWithVisibility);
+    };
+  }, [clearTimerRef, scheduleTick]);
+
+  const totalSeconds = Math.floor(remainingMs / 1000);
+  const minute = Math.floor(totalSeconds / 60).toString();
+  const second = (totalSeconds % 60).toString().padStart(2, "0");
+  const tenth = Math.floor((remainingMs % 1000) / 100).toString();
 
   return (
     <article

@@ -9,6 +9,7 @@ type DaySchedule = {
     time: string;
     title: string;
     description: string;
+    link?: string;
   }[];
 };
 
@@ -16,24 +17,111 @@ const friday: DaySchedule = {
   weekday: "Friday",
   month: "Jun",
   date: "26",
-  summary: "Workshops & hangout",
-  schedule: [],
+  summary: "Workshops",
+  schedule: [
+    {
+      time: "6PM–8PM",
+      title: "ROCKFORCE CREW WORKSHOP",
+      description:
+        "Breaking foundations, battle tactics, and real crew knowledge — from elements to longevity.",
+      link: "https://luma.com/inka0iev",
+    },
+    {
+      time: "8PM–10PM",
+      title: "STORM’S KNOWLEDGE WORKSHOP",
+      description:
+        "International criteria, battle evaluation, judging insight, conversations, Q&A, and community exchange.",
+      link: "https://luma.com/inka0iev",
+    },
+  ],
 };
 
 const saturday: DaySchedule = {
-  weekday: "Saturday",
+  weekday: "Saturday - Prelims",
   month: "Jun",
   date: "27",
   summary: "Workshops, Prelims & Party",
-  schedule: [],
+  schedule: [
+    {
+      time: "12:00PM",
+      title: "Doors open",
+      description: "",
+    },
+    {
+      time: "1:00PM",
+      title: "Openstyles - Block 1",
+      description: "",
+    },
+    {
+      time: "2:00PM",
+      title: "Breaking - Block 2",
+      description: "",
+    },
+    {
+      time: "3:00PM",
+      title: "Openstyles - Block 3",
+      description: "",
+    },
+    {
+      time: "4:00PM",
+      title: "Breaking - Block 4",
+      description: "",
+    },
+    {
+      time: "5:00PM",
+      title: "Top 8 Announcement &  Challenger Rounds",
+      description: "",
+    },
+    {
+      time: "6:00PM",
+      title: "Day End",
+      description: "",
+    },
+  ],
 };
 
 const sunday: DaySchedule = {
-  weekday: "Sunday",
+  weekday: "Sunday - Finals",
   month: "Jun",
   date: "28",
-  summary: "Finals Crew",
-  schedule: [],
+  summary: "Top 8 to finals",
+  schedule: [
+    {
+      time: "12:00PM",
+      title: "Doors open",
+      description: "",
+    },
+    {
+      time: "1:00PM",
+      title: "Openstyles - Top 8",
+      description: "",
+    },
+    {
+      time: "2:00PM",
+      title: "Breaking - Top 8",
+      description: "",
+    },
+    {
+      time: "3:00PM",
+      title: "Openstyles - Top 4",
+      description: "",
+    },
+    {
+      time: "3:30PM",
+      title: "Breaking - Top 4",
+      description: "",
+    },
+    {
+      time: "4:00PM",
+      title: "Openstyles - Finals",
+      description: "",
+    },
+    {
+      time: "4:15PM",
+      title: "Breaking - Finals",
+      description: "",
+    },
+  ],
 };
 
 export function Schedule() {
@@ -65,7 +153,7 @@ export function Schedule() {
           </TabPanels>
         </TabGroup>
       </section>
-      <section className="mx-auto hidden max-w-5xl grid-cols-3 gap-12 md:grid" id={id}>
+      <section className="mx-auto hidden max-w-5xl grid-cols-3 items-start gap-12 md:grid" id={id}>
         <Day {...friday} />
         <Day {...saturday} />
         <Day {...sunday} />
@@ -76,7 +164,7 @@ export function Schedule() {
 
 function Day({ weekday, summary, month, date, schedule }: DaySchedule) {
   return (
-    <div className="rounded-2xl border p-4">
+    <div className="self-start rounded-2xl border p-4">
       <div className="flex justify-between">
         <div>
           <h3>{weekday}</h3>
@@ -89,15 +177,26 @@ function Day({ weekday, summary, month, date, schedule }: DaySchedule) {
       </div>
 
       <div>
-        {schedule.length > 0 ? (
+        {schedule.length === 0 ? (
           <div>To be announced</div>
         ) : (
           schedule.map((item) => (
-            <div key={item.time}>
-              <span>{item.time}</span>
+            <div key={`${item.time}-${item.title}`} className="space-y-1 border-t py-4 first:mt-4">
+              <span className="text-sm font-medium text-gray-500">{item.time}</span>
               <div>
-                <span>{item.title}</span>
-                <p>{item.description}</p>
+                {item.link ? (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block font-semibold underline decoration-gray-300 underline-offset-4 transition hover:decoration-current"
+                  >
+                    {item.title}
+                  </a>
+                ) : (
+                  <span className="block font-semibold">{item.title}</span>
+                )}
+                <p className="text-sm text-gray-600">{item.description}</p>
               </div>
             </div>
           ))

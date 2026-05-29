@@ -11,6 +11,14 @@ type Competitor = {
   color: "red" | "blue" | "gold";
 };
 
+type PersistedAppState = {
+  mode?: BattleMode;
+  focusedTimer?: TimerId;
+  activeTimer?: TimerId | null;
+};
+
+const APP_STORAGE_KEY = "battle-timers:app-state";
+
 const COMPETITORS_BY_MODE: Record<BattleMode, Competitor[]> = {
   "2WAY": [
     { id: "A", teamName: "Team A", color: "red" },
@@ -62,11 +70,62 @@ export function Timers() {
   const [activeTimer, setActiveTimer] = useState<TimerId | null>(null);
   const [timerApiById, setTimerApiById] = useState<Partial<Record<TimerId, TimerApi>>>({});
   const [editingTimer, setEditingTimer] = useState<TimerId | null>(null);
+  const [persistenceReady, setPersistenceReady] = useState(false);
 
   const helpDialogRef = useRef<HTMLDialogElement>(null);
+  const hasHydratedRef = useRef(false);
 
   const competitors = useMemo(() => COMPETITORS_BY_MODE[mode], [mode]);
   const availableIds = useMemo(() => competitors.map((c) => c.id), [competitors]);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(APP_STORAGE_KEY);
+      if (!raw) return;
+
+      const persisted = JSON.parse(raw) as PersistedAppState;
+
+      if (persisted.mode === "2WAY" || persisted.mode === "3WAY") {
+        setMode(persisted.mode);
+      }
+      if (
+        persisted.focusedTimer === "A" ||
+        persisted.focusedTimer === "B" ||
+        persisted.focusedTimer === "C"
+      ) {
+        setFocusedTimer(persisted.focusedTimer);
+      }
+      if (
+        persisted.activeTimer === null ||
+        persisted.activeTimer === "A" ||
+        persisted.activeTimer === "B" ||
+        persisted.activeTimer === "C"
+      ) {
+        setActiveTimer(persisted.activeTimer ?? null);
+      }
+    } catch {
+      // Ignore invalid persisted app state
+    } finally {
+      hasHydratedRef.current = true;
+      setPersistenceReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+
+    const snapshot: PersistedAppState = {
+      mode,
+      focusedTimer,
+      activeTimer,
+    };
+
+    try {
+      window.localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(snapshot));
+    } catch {
+      // Ignore storage write failures
+    }
+  }, [activeTimer, focusedTimer, mode]);
 
   useEffect(() => {
     if (!availableIds.includes(focusedTimer)) {
@@ -78,8 +137,44 @@ export function Timers() {
   }, [availableIds, focusedTimer, activeTimer]);
 
   const registerApi = useCallback((id: TimerId, api: TimerApi) => {
-    setTimerApiById((prev) => ({ ...prev, [id]: api }));
+    setTimerApiById((prev) => {
+      if (prev[id] === api) return prev;
+      return { ...prev, [id]: api };
+    });
   }, []);
+
+  const registerApiHandlers = useMemo<Record<TimerId, (api: TimerApi) => void>>(
+    () => ({
+      A: (api) => registerApi("A", api),
+      B: (api) => registerApi("B", api),
+      C: (api) => registerApi("C", api),
+    }),
+    [registerApi],
+  );
+
+  const runningChangeHandlers = useMemo<Record<TimerId, (running: boolean) => void>>(
+    () => ({
+      A: (running) => {
+        setActiveTimer((current) => {
+          if (running) return "A";
+          return current === "A" ? null : current;
+        });
+      },
+      B: (running) => {
+        setActiveTimer((current) => {
+          if (running) return "B";
+          return current === "B" ? null : current;
+        });
+      },
+      C: (running) => {
+        setActiveTimer((current) => {
+          if (running) return "C";
+          return current === "C" ? null : current;
+        });
+      },
+    }),
+    [],
+  );
 
   const focusTimer = (id: TimerId) => {
     if (!availableIds.includes(id)) return;
@@ -226,15 +321,18 @@ export function Timers() {
         {competitors.map((competitor) => (
           <BattleTimer
             key={competitor.id}
+            storageKey={`battle-timers:${competitor.id}`}
+            persistenceReady={persistenceReady}
+            shouldRestoreRunning={activeTimer === competitor.id}
             teamName={competitor.teamName}
             color={competitor.color}
-            onStart={() => setActiveTimer(competitor.id)}
+            onRunningChange={runningChangeHandlers[competitor.id]}
             disabled={activeTimer !== null && activeTimer !== competitor.id}
             focused={focusedTimer === competitor.id}
             editing={editingTimer === competitor.id}
             onFocus={() => focusTimer(competitor.id)}
             onEditDone={() => setEditingTimer(null)}
-            onRegisterApi={(api) => registerApi(competitor.id, api)}
+            onRegisterApi={registerApiHandlers[competitor.id]}
           />
         ))}
       </div>
