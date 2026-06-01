@@ -2,6 +2,7 @@ import nobunagaImage from "./nobunaga.jpg?url";
 import stormImage from "./storm.jpg?url";
 import rubixImage from "./rubix.jpg?url";
 import ladycImage from "./ladyc.jpg?url";
+import genieImage from "./genie.png?url";
 import unknownImage from "@/images/avatars/unknown.png?url";
 
 type Person = {
@@ -19,10 +20,10 @@ const people: Person[] = [
     instagram: "https://www.instagram.com/nobunagalewing",
   },
   {
-    name: "TBA",
+    name: "Genie",
     role: "MC",
-    image: unknownImage,
-    instagram: "",
+    image: genieImage,
+    instagram: "https://www.instagram.com/genieboss",
   },
   {
     name: "Storm",
