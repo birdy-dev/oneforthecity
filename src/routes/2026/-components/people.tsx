@@ -3,6 +3,8 @@ import stormImage from "./storm.jpg?url";
 import rubixImage from "./rubix.jpg?url";
 import ladycImage from "./ladyc.jpg?url";
 import genieImage from "./genie.png?url";
+import emmaImage from "./emma.jpg?url";
+import ontonImage from "./onton.jpg?url";
 import unknownImage from "@/images/avatars/unknown.png?url";
 
 type Person = {
@@ -44,16 +46,16 @@ const people: Person[] = [
     instagram: "https://www.instagram.com/carolineladyc",
   },
   {
-    name: "TBA",
+    name: "Emma",
     role: "Judge",
-    image: unknownImage,
-    instagram: "",
+    image: emmaImage,
+    instagram: "https://www.instagram.com/bgirl.emmaa",
   },
   {
-    name: "TBA",
+    name: "Onton",
     role: "Judge",
-    image: unknownImage,
-    instagram: "",
+    image: ontonImage,
+    instagram: "https://www.instagram.com/ontonsnc",
   },
 ];
 
