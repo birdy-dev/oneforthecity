@@ -10,6 +10,11 @@
       "custom_domain": true,
     },
   ],
+  "observability": {
+    "logs": {
+      "enabled": true,
+    },
+  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -18,4 +23,7 @@
       "migrations_dir": "drizzle",
     },
   ],
+  "vars": {
+    "VITE_STRIPE_PUBLISHABLE_KEY": "pk_test_51QpDSDJQN4XeeFbTZKaqrkpI5H7nTVVnWh338zPdQPQfNjV1XGk5XBgnv27WUhUainynYl0MmxN9MlWUgfgLL4N900yAyoqpbk",
+  },
 }
