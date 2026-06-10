@@ -1,6 +1,7 @@
 import { NotFound } from "@/components/NotFound";
 import "@/tailwind.css";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 import { GoogleAnalytics } from "tanstack-router-ga4";
 
 const meta = {
@@ -55,6 +56,7 @@ function RootLayout() {
         <div className="flex w-full flex-col">
           <Outlet />
         </div>
+        <Toaster richColors position="top-right" />
         <Scripts />
       </body>
     </html>

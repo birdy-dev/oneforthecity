@@ -1,17 +1,24 @@
+import { buttonStyles } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { Footer } from "@/components/Footer";
+import { cn } from "@/utils/cn";
+import { getStoreEnabled } from "@/utils/store_enabled.functions";
 import instagramIcon from "@/images/icons/instagram.svg";
 import lumaIcon from "@/images/icons/luma.png";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
+import { StoreIcon } from "lucide-react";
 import { Banner } from "./-components/Banner";
 import { Gallery } from "./-components/Gallery";
 
 export const Route = createFileRoute("/home/")({
+  loader: async () => getStoreEnabled(),
   component: Home,
 });
 
 function Home() {
+  const { isStoreEnabled } = Route.useLoaderData();
+
   return (
     <>
       <Banner />
@@ -27,16 +34,35 @@ function Home() {
           </div>
 
           <div className="mx-auto w-full max-w-96 space-y-6 py-16">
+            {isStoreEnabled ? (
+              <Link
+                className={cn(
+                  buttonStyles,
+                  "w-full gap-4 rounded-full px-8 py-4 font-medium shadow-xs",
+                )}
+                to="/store"
+              >
+                <StoreIcon className="size-6" aria-hidden="true" />
+                <span className="text-center">Merch</span>
+              </Link>
+            ) : null}
+
             <a
-              className="bg-opacity-80 inline-flex w-full items-center gap-4 rounded-full bg-indigo-50 px-8 py-4 font-medium shadow-xs hover:bg-indigo-100"
+              className={cn(
+                buttonStyles,
+                "w-full gap-4 rounded-full px-8 py-4 font-medium shadow-xs",
+              )}
               href="https://lu.ma/oneforthecity"
             >
               <Image className="inline size-6" src={lumaIcon} alt="Luma" height={24} width={24} />
-              <span className="text-center">Upcoming events</span>
+              <span className="text-center">Luma - Upcoming events</span>
             </a>
 
             <a
-              className="bg-opacity-80 inline-flex w-full items-center gap-4 rounded-full bg-indigo-50 px-8 py-4 font-medium shadow-xs hover:bg-indigo-100"
+              className={cn(
+                buttonStyles,
+                "w-full gap-4 rounded-full px-8 py-4 font-medium shadow-xs",
+              )}
               href="https://www.instagram.com/oneforthecity/"
             >
               <Image
@@ -63,30 +89,16 @@ function Home() {
             />
           </div>
 
-          <div className="space-y-6 py-16 font-display text-2xl tracking-tight text-blue-950">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl">
-              About
-            </h2>
-            <p>
-              One for the City was founded in 2021, with the aim of supporting the street dance
-              community. <abbr title="One for the City">OFTC</abbr> exceeded expectations by
-              providing opportunities to battle, learn and connect with local, national and
-              international street dance educators. Battles are deeply rooted in Hip-Hop culture,
-              and are central to <abbr title="One for the City">OFTC</abbr>, celebrating Hip-Hop
-              values like Love, Peace, Unity, and Having Fun. Through collaborations and grassroots
-              efforts, <abbr title="One for the City">OFTC</abbr> has facilitated city-cyphers,
-              freestyle sessions and workshops to more than four cities in Canada over the past
-              three years.
-            </p>
-          </div>
-
           <Gallery />
         </Container>
 
         <Container>
           <div className="rounded-lg border p-8">
             <h3 className="text-center text-xl">Tools</h3>
-            <Link className="inline-block rounded bg-gray-300 p-4" to="/timer">
+            <Link
+              className={cn(buttonStyles, "inline-flex rounded-full px-5 py-3 text-sm")}
+              to="/timer"
+            >
               Battle Timer
             </Link>
           </div>

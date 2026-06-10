@@ -1,16 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import type { ComponentPropsWithoutRef } from "react";
-import clsx from "clsx";
 
-const baseStyles =
-  "inline-flex justify-center rounded-2xl bg-blue-600 p-4 text-base font-semibold text-white hover:bg-blue-500 focus:outline-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:text-white/70";
+import { cn } from "@/utils/cn";
+
+export const buttonStyles =
+  "inline-flex items-center justify-center rounded-2xl bg-black p-4 text-base font-semibold text-white transition-colors duration-200 hover:bg-neutral-800 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60";
 
 type ButtonProps =
   | (ComponentPropsWithoutRef<typeof Link> & { className?: string })
   | (ComponentPropsWithoutRef<"button"> & { to?: undefined; className?: string });
 
 export function Button({ className, ...props }: ButtonProps) {
-  const cls = clsx(baseStyles, className);
+  const cls = cn(buttonStyles, className);
   return props.to != null ? (
     <Link className={cls} {...(props as ComponentPropsWithoutRef<typeof Link>)} />
   ) : (

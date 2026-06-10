@@ -1,3 +1,5 @@
+import { buttonStyles } from "@/components/Button";
+import { cn } from "@/utils/cn";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -37,13 +39,12 @@ export function TicketBar() {
     document.body.appendChild(script);
   }, []);
 
-  const ticketButtonClass =
-    "inline-flex w-full items-center justify-center rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline-none sm:px-4";
+  const ticketButtonClass = cn(buttonStyles, "w-full rounded-full px-4 py-2 text-sm sm:px-4");
 
   const ticketLinks = (isMobile = false) => (
     <>
       <div
-        className={isMobile ? "transition-opacity duration-300 ease-in" : undefined}
+        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
         style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "10ms" } : undefined}
       >
         <a
@@ -60,7 +61,7 @@ export function TicketBar() {
       </div>
 
       <div
-        className={isMobile ? "transition-opacity duration-300 ease-in" : undefined}
+        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
         style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "60ms" } : undefined}
       >
         <a
@@ -77,12 +78,12 @@ export function TicketBar() {
       </div>
 
       <div
-        className={isMobile ? "transition-opacity duration-300 ease-in" : undefined}
+        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
         style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "110ms" } : undefined}
       >
         <div className="flex flex-nowrap overflow-clip rounded-full whitespace-nowrap">
           <a
-            className="inline-flex w-full items-center justify-center rounded-full bg-gray-900 py-2 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline-none sm:px-4"
+            className={cn(buttonStyles, "w-full rounded-full py-2 text-sm sm:px-4")}
             href="https://www.ticketweb.ca/event/one-for-the-city-pawn-shop-live-formally-known-tickets/14839363"
             target="_blank"
             rel="noopener noreferrer"
@@ -101,7 +102,7 @@ export function TicketBar() {
         <div className="flex justify-center sm:hidden">
           <button
             type="button"
-            className="inline-flex items-center rounded-full bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-gray-800 focus-visible:outline-none"
+            className={cn(buttonStyles, "rounded-full px-4 py-3 text-sm shadow-lg")}
             aria-controls="mobile-ticket-links"
             aria-expanded={isMobileOpen}
             aria-label="Toggle ticket options"

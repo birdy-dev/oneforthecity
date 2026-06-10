@@ -3,3 +3,7 @@ dist
 tmp
 .wrangler
 .DS_Store
+.env
+.agents
+.pnpm-store
+tsconfig.tsbuildinfo

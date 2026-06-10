@@ -1,3 +1,5 @@
+import { buttonStyles } from "@/components/Button";
+import { cn } from "@/utils/cn";
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon } from "lucide-react";
 
@@ -15,7 +17,7 @@ export function Banner() {
           </span>
         </p>
         <Link
-          className="flex flex-none items-center justify-center gap-1 rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          className={cn(buttonStyles, "flex-none gap-1 rounded-full px-3.5 py-1 text-sm shadow-xs")}
           to="/2026"
           // href="https://luma.com/zbhkbwr0"
         >

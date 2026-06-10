@@ -5,7 +5,6 @@ import ladycImage from "./ladyc.jpg?url";
 import genieImage from "./genie.png?url";
 import emmaImage from "./emma.jpg?url";
 import ontonImage from "./onton.jpg?url";
-import unknownImage from "@/images/avatars/unknown.png?url";
 
 type Person = {
   name: string;

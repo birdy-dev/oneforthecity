@@ -9,11 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TimerIndexRouteImport } from './routes/timer/index'
+import { Route as StoreIndexRouteImport } from './routes/store/index'
 import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as R2026IndexRouteImport } from './routes/2026/index'
+import { Route as StoreSuccessRouteImport } from './routes/store/success'
+import { Route as StoreProductsRouteImport } from './routes/store/products'
+import { Route as StoreCartRouteImport } from './routes/store/cart'
+import { Route as StoreAdminRouteImport } from './routes/store/admin'
+import { Route as StoreWebhookStripeRouteImport } from './routes/store/webhook/stripe'
+import { Route as StoreProductIdRouteImport } from './routes/store/product.$id'
 
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -23,6 +36,11 @@ const TimerIndexRoute = TimerIndexRouteImport.update({
   id: '/timer/',
   path: '/timer/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StoreIndexRoute = StoreIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StoreRoute,
 } as any)
 const HomeIndexRoute = HomeIndexRouteImport.update({
   id: '/home/',
@@ -34,36 +52,126 @@ const R2026IndexRoute = R2026IndexRouteImport.update({
   path: '/2026/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StoreSuccessRoute = StoreSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreProductsRoute = StoreProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreCartRoute = StoreCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreAdminRoute = StoreAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreWebhookStripeRoute = StoreWebhookStripeRouteImport.update({
+  id: '/webhook/stripe',
+  path: '/webhook/stripe',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreProductIdRoute = StoreProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => StoreRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/store': typeof StoreRouteWithChildren
+  '/store/admin': typeof StoreAdminRoute
+  '/store/cart': typeof StoreCartRoute
+  '/store/products': typeof StoreProductsRoute
+  '/store/success': typeof StoreSuccessRoute
   '/2026/': typeof R2026IndexRoute
   '/home/': typeof HomeIndexRoute
+  '/store/': typeof StoreIndexRoute
   '/timer/': typeof TimerIndexRoute
+  '/store/product/$id': typeof StoreProductIdRoute
+  '/store/webhook/stripe': typeof StoreWebhookStripeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/store/admin': typeof StoreAdminRoute
+  '/store/cart': typeof StoreCartRoute
+  '/store/products': typeof StoreProductsRoute
+  '/store/success': typeof StoreSuccessRoute
   '/2026': typeof R2026IndexRoute
   '/home': typeof HomeIndexRoute
+  '/store': typeof StoreIndexRoute
   '/timer': typeof TimerIndexRoute
+  '/store/product/$id': typeof StoreProductIdRoute
+  '/store/webhook/stripe': typeof StoreWebhookStripeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/store': typeof StoreRouteWithChildren
+  '/store/admin': typeof StoreAdminRoute
+  '/store/cart': typeof StoreCartRoute
+  '/store/products': typeof StoreProductsRoute
+  '/store/success': typeof StoreSuccessRoute
   '/2026/': typeof R2026IndexRoute
   '/home/': typeof HomeIndexRoute
+  '/store/': typeof StoreIndexRoute
   '/timer/': typeof TimerIndexRoute
+  '/store/product/$id': typeof StoreProductIdRoute
+  '/store/webhook/stripe': typeof StoreWebhookStripeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/2026/' | '/home/' | '/timer/'
+  fullPaths:
+    | '/'
+    | '/store'
+    | '/store/admin'
+    | '/store/cart'
+    | '/store/products'
+    | '/store/success'
+    | '/2026/'
+    | '/home/'
+    | '/store/'
+    | '/timer/'
+    | '/store/product/$id'
+    | '/store/webhook/stripe'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/2026' | '/home' | '/timer'
-  id: '__root__' | '/' | '/2026/' | '/home/' | '/timer/'
+  to:
+    | '/'
+    | '/store/admin'
+    | '/store/cart'
+    | '/store/products'
+    | '/store/success'
+    | '/2026'
+    | '/home'
+    | '/store'
+    | '/timer'
+    | '/store/product/$id'
+    | '/store/webhook/stripe'
+  id:
+    | '__root__'
+    | '/'
+    | '/store'
+    | '/store/admin'
+    | '/store/cart'
+    | '/store/products'
+    | '/store/success'
+    | '/2026/'
+    | '/home/'
+    | '/store/'
+    | '/timer/'
+    | '/store/product/$id'
+    | '/store/webhook/stripe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  StoreRoute: typeof StoreRouteWithChildren
   R2026IndexRoute: typeof R2026IndexRoute
   HomeIndexRoute: typeof HomeIndexRoute
   TimerIndexRoute: typeof TimerIndexRoute
@@ -71,6 +179,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -84,6 +199,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/timer/'
       preLoaderRoute: typeof TimerIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/store/': {
+      id: '/store/'
+      path: '/'
+      fullPath: '/store/'
+      preLoaderRoute: typeof StoreIndexRouteImport
+      parentRoute: typeof StoreRoute
     }
     '/home/': {
       id: '/home/'
@@ -99,11 +221,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R2026IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/store/success': {
+      id: '/store/success'
+      path: '/success'
+      fullPath: '/store/success'
+      preLoaderRoute: typeof StoreSuccessRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/products': {
+      id: '/store/products'
+      path: '/products'
+      fullPath: '/store/products'
+      preLoaderRoute: typeof StoreProductsRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/cart': {
+      id: '/store/cart'
+      path: '/cart'
+      fullPath: '/store/cart'
+      preLoaderRoute: typeof StoreCartRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/admin': {
+      id: '/store/admin'
+      path: '/admin'
+      fullPath: '/store/admin'
+      preLoaderRoute: typeof StoreAdminRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/webhook/stripe': {
+      id: '/store/webhook/stripe'
+      path: '/webhook/stripe'
+      fullPath: '/store/webhook/stripe'
+      preLoaderRoute: typeof StoreWebhookStripeRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/product/$id': {
+      id: '/store/product/$id'
+      path: '/product/$id'
+      fullPath: '/store/product/$id'
+      preLoaderRoute: typeof StoreProductIdRouteImport
+      parentRoute: typeof StoreRoute
+    }
   }
 }
 
+interface StoreRouteChildren {
+  StoreAdminRoute: typeof StoreAdminRoute
+  StoreCartRoute: typeof StoreCartRoute
+  StoreProductsRoute: typeof StoreProductsRoute
+  StoreSuccessRoute: typeof StoreSuccessRoute
+  StoreIndexRoute: typeof StoreIndexRoute
+  StoreProductIdRoute: typeof StoreProductIdRoute
+  StoreWebhookStripeRoute: typeof StoreWebhookStripeRoute
+}
+
+const StoreRouteChildren: StoreRouteChildren = {
+  StoreAdminRoute: StoreAdminRoute,
+  StoreCartRoute: StoreCartRoute,
+  StoreProductsRoute: StoreProductsRoute,
+  StoreSuccessRoute: StoreSuccessRoute,
+  StoreIndexRoute: StoreIndexRoute,
+  StoreProductIdRoute: StoreProductIdRoute,
+  StoreWebhookStripeRoute: StoreWebhookStripeRoute,
+}
+
+const StoreRouteWithChildren = StoreRoute._addFileChildren(StoreRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  StoreRoute: StoreRouteWithChildren,
   R2026IndexRoute: R2026IndexRoute,
   HomeIndexRoute: HomeIndexRoute,
   TimerIndexRoute: TimerIndexRoute,

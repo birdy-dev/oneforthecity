@@ -3,11 +3,19 @@
   "name": "oneforthecity",
   "compatibility_date": "2026-02-19",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
+  "main": "./src/server.ts",
   "routes": [
     {
       "pattern": "oneforthecity.com",
       "custom_domain": true,
+    },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oneforthecity",
+      "database_id": "65973bf8-3591-4972-94c9-4d071ed5c43b",
+      "migrations_dir": "drizzle",
     },
   ],
 }
