@@ -84,8 +84,14 @@ const sunday: DaySchedule = {
   weekday: "Sunday - Finals",
   month: "Jun",
   date: "28",
-  summary: "Top 8 to finals",
+  summary: "Workshop & Top 8 to finals",
   schedule: [
+    {
+      time: "10:30AM–12:00PM",
+      title: "RUBIX HIPHOP WORKSHOP",
+      description: "New Roots Breaking Studio",
+      link: "https://luma.com/vj3ri6go",
+    },
     {
       time: "12:00PM",
       title: "Doors open",
