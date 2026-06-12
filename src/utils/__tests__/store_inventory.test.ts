@@ -20,6 +20,7 @@ vi.mock("@/db", () => ({
 }));
 
 import {
+  getAdminDashboard,
   getInventoryRows,
   getOrders,
   recordInPersonSale,
@@ -151,6 +152,21 @@ describe("store inventory admin data", () => {
 
     expect(results).toHaveLength(1);
     expect(results[0]?.customerEmail).toBe("buyer%literal@example.com");
+  });
+
+  it("returns every unfulfilled order on the admin dashboard", async () => {
+    await Promise.all(
+      Array.from({ length: 12 }, (_, index) =>
+        insertOrder({
+          stripeSessionId: `cs_unfulfilled_${index}`,
+          paidAt: `2026-06-08T${String(index).padStart(2, "0")}:00:00.000Z`,
+        }),
+      ),
+    );
+
+    const dashboard = await getAdminDashboard();
+
+    expect(dashboard.unfulfilledOrders).toHaveLength(12);
   });
 });
 

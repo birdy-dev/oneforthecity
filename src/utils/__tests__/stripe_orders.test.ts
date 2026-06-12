@@ -24,13 +24,15 @@ vi.mock("@/db", () => ({
 }));
 
 vi.mock("stripe", () => ({
-  default: vi.fn(() => ({
-    checkout: {
-      sessions: {
-        listLineItems: stripeState.listLineItems,
+  default: vi.fn(function StripeMock() {
+    return {
+      checkout: {
+        sessions: {
+          listLineItems: stripeState.listLineItems,
+        },
       },
-    },
-  })),
+    };
+  }),
 }));
 
 import { createPaidOrderFromCheckoutSession } from "@/utils/stripe_orders";
@@ -110,7 +112,7 @@ describe("Stripe store order creation", () => {
       customerEmail: "buyer@example.com",
       customerName: "Buyer Name",
       fulfilled: false,
-      paidAt: "2026-08-09T18:26:40.000Z",
+      paidAt: "2026-08-07T16:26:40.000Z",
     });
 
     const itemRows = await dbState.db.select().from(orderItems);
@@ -158,6 +160,49 @@ describe("Stripe store order creation", () => {
 
     expect(firstResult).toMatchObject({ created: true });
     expect(secondResult).toEqual({ created: false, reason: "duplicate" });
+    expect(await dbState.db.select().from(orders)).toHaveLength(1);
+    expect(await dbState.db.select().from(orderItems)).toHaveLength(1);
+  });
+
+  it("repairs an existing order that is missing line items", async () => {
+    stripeState.listLineItems.mockResolvedValue({
+      data: [
+        {
+          id: "li_repair",
+          quantity: 1,
+          price: {
+            unit_amount: 2999,
+            currency: "cad",
+            product: {
+              metadata: {
+                product_id: "vol-6-tee",
+                size: "XL",
+              },
+            },
+          },
+        },
+      ],
+    });
+    await dbState.db.insert(orders).values({
+      stripeSessionId: "cs_repair",
+      stripePaymentIntentId: "pi_repair",
+      customerEmail: "buyer@example.com",
+      customerName: null,
+      fulfilled: false,
+      paidAt: "2026-06-12T00:00:00.000Z",
+      createdAt: "2026-06-12T00:00:00.000Z",
+      updatedAt: "2026-06-12T00:00:00.000Z",
+    });
+
+    const result = await createPaidOrderFromCheckoutSession({
+      id: "cs_repair",
+      payment_status: "paid",
+      created: 1_781_222_400,
+      payment_intent: "pi_repair",
+      customer_email: "buyer@example.com",
+    } as any);
+
+    expect(result).toMatchObject({ created: false, reason: "repaired" });
     expect(await dbState.db.select().from(orders)).toHaveLength(1);
     expect(await dbState.db.select().from(orderItems)).toHaveLength(1);
   });

@@ -53,7 +53,7 @@ export type AdminOrderItem = {
 
 export type AdminDashboardData = {
   inventory: InventoryRow[];
-  recentUnfulfilledOrders: AdminOrder[];
+  unfulfilledOrders: AdminOrder[];
   searchResults: AdminOrder[];
 };
 
@@ -173,19 +173,19 @@ export async function getInventoryRows(): Promise<InventoryRow[]> {
 }
 
 export async function getAdminDashboard(searchEmail?: string): Promise<AdminDashboardData> {
-  const [inventory, recentUnfulfilledOrders, searchResults] = await Promise.all([
+  const [inventory, unfulfilledOrders, searchResults] = await Promise.all([
     getInventoryRows(),
-    getOrders({ fulfilled: false, limit: 10 }),
+    getOrders({ fulfilled: false }),
     searchEmail ? getOrders({ email: searchEmail, limit: 25 }) : Promise.resolve([]),
   ]);
 
-  return { inventory, recentUnfulfilledOrders, searchResults };
+  return { inventory, unfulfilledOrders, searchResults };
 }
 
 export async function getOrders(options: {
   email?: string;
   fulfilled?: boolean;
-  limit: number;
+  limit?: number;
 }): Promise<AdminOrder[]> {
   const db = getDb();
   const emailSearch = options.email?.trim().toLowerCase();
@@ -196,12 +196,12 @@ export async function getOrders(options: {
     typeof options.fulfilled === "boolean" ? eq(orders.fulfilled, options.fulfilled) : undefined,
   ].filter(Boolean);
 
-  const orderRows = await db
+  const query = db
     .select()
     .from(orders)
     .where(where.length === 0 ? undefined : where.length === 1 ? where[0] : and(...where))
-    .orderBy(desc(orders.paidAt))
-    .limit(options.limit);
+    .orderBy(desc(orders.paidAt));
+  const orderRows = options.limit ? await query.limit(options.limit) : await query;
 
   return hydrateOrders(orderRows);
 }

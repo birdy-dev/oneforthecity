@@ -40,52 +40,54 @@ export async function createPaidOrderFromCheckoutSession(session: Stripe.Checkou
       ? session.payment_intent
       : session.payment_intent?.id;
   const db = getDb();
+  const existingOrder = await db
+    .select({ id: orders.id })
+    .from(orders)
+    .where(eq(orders.stripeSessionId, session.id))
+    .limit(1);
 
-  return db.transaction(async (tx) => {
-    const existingOrder = await tx
+  if (existingOrder[0]) {
+    return ensureOrderItems(db, existingOrder[0].id, lineItems);
+  }
+
+  const insertedOrder = await db
+    .insert(orders)
+    .values({
+      stripeSessionId: session.id,
+      stripePaymentIntentId: paymentIntentId ?? null,
+      customerEmail: customerEmail.trim().toLowerCase(),
+      customerName: session.customer_details?.name ?? null,
+      fulfilled: false,
+      paidAt,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoNothing({ target: orders.stripeSessionId })
+    .returning({ id: orders.id });
+  const orderId = insertedOrder[0]?.id;
+
+  if (!orderId) {
+    const concurrentOrder = await db
       .select({ id: orders.id })
       .from(orders)
       .where(eq(orders.stripeSessionId, session.id))
       .limit(1);
 
-    if (existingOrder.length > 0) {
-      return { created: false, reason: "duplicate" };
-    }
-
-    const insertedOrder = await tx
-      .insert(orders)
-      .values({
-        stripeSessionId: session.id,
-        stripePaymentIntentId: paymentIntentId ?? null,
-        customerEmail: customerEmail.trim().toLowerCase(),
-        customerName: session.customer_details?.name ?? null,
-        fulfilled: false,
-        paidAt,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .returning({ id: orders.id });
-
-    const orderId = insertedOrder[0]?.id;
-
-    if (!orderId) {
+    if (!concurrentOrder[0]) {
       throw new Error("Unable to create order.");
     }
 
-    await tx.insert(orderItems).values(
-      lineItems.map((item) => ({
-        orderId,
-        productId: item.productId,
-        productName: item.productName,
-        size: item.size,
-        quantity: item.quantity,
-        unitAmount: item.unitAmount,
-        currency: item.currency,
-      })),
-    );
+    return ensureOrderItems(db, concurrentOrder[0].id, lineItems);
+  }
 
-    return { created: true, orderId };
-  });
+  try {
+    await insertOrderItems(db, orderId, lineItems);
+  } catch (error) {
+    await db.delete(orders).where(eq(orders.id, orderId));
+    throw error;
+  }
+
+  return { created: true, orderId };
 }
 
 async function getCheckoutLineItems(stripe: Stripe, sessionId: string) {
@@ -118,4 +120,41 @@ async function getCheckoutLineItems(stripe: Stripe, sessionId: string) {
       currency: (lineItem.price?.currency ?? productConfig?.currency ?? "cad").toUpperCase(),
     };
   });
+}
+
+async function ensureOrderItems(
+  db: ReturnType<typeof getDb>,
+  orderId: number,
+  lineItems: StripeOrderLineItem[],
+) {
+  const existingItems = await db
+    .select({ id: orderItems.id })
+    .from(orderItems)
+    .where(eq(orderItems.orderId, orderId))
+    .limit(1);
+
+  if (existingItems.length > 0) {
+    return { created: false, reason: "duplicate" };
+  }
+
+  await insertOrderItems(db, orderId, lineItems);
+  return { created: false, reason: "repaired", orderId };
+}
+
+function insertOrderItems(
+  db: ReturnType<typeof getDb>,
+  orderId: number,
+  lineItems: StripeOrderLineItem[],
+) {
+  return db.insert(orderItems).values(
+    lineItems.map((item) => ({
+      orderId,
+      productId: item.productId,
+      productName: item.productName,
+      size: item.size,
+      quantity: item.quantity,
+      unitAmount: item.unitAmount,
+      currency: item.currency,
+    })),
+  );
 }

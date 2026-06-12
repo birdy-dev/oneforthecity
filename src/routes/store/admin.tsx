@@ -137,11 +137,12 @@ function StoreAdminPage() {
           <div className="space-y-6">
             <InventorySection inventory={dashboard.inventory} />
             <OrdersSection
-              emptyLabel="No recent unfulfilled orders."
+              emptyLabel="No unfulfilled orders."
               isBusy={isBusy}
               onFulfillmentChange={handleFulfillment}
-              orders={dashboard.recentUnfulfilledOrders}
-              title="Recent Unfulfilled Online Orders"
+              orders={dashboard.unfulfilledOrders}
+              scrollAfter={10}
+              title="Unfulfilled Online Orders"
             />
             {searchEmail ? (
               <OrdersSection
@@ -261,12 +262,14 @@ function OrdersSection({
   isBusy,
   onFulfillmentChange,
   orders,
+  scrollAfter,
   title,
 }: {
   emptyLabel: string;
   isBusy: boolean;
   onFulfillmentChange: (orderId: number, fulfilled: boolean) => Promise<void>;
   orders: AdminOrder[];
+  scrollAfter?: number;
   title: string;
 }) {
   return (
@@ -275,9 +278,14 @@ function OrdersSection({
       {orders.length === 0 ? (
         <p className="text-sm text-stone-600">{emptyLabel}</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div
+          className={cn(
+            "overflow-x-auto",
+            scrollAfter && orders.length > scrollAfter && "max-h-[52rem] overflow-y-auto",
+          )}
+        >
           <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-            <thead>
+            <thead className="sticky top-0 z-10 bg-white">
               <tr className="border-b border-stone-200 text-xs font-semibold tracking-[0.12em] text-stone-500 uppercase">
                 <th className="py-3 pr-4">Customer</th>
                 <th className="py-3 pr-4">Order</th>

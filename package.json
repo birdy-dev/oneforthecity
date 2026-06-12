@@ -15,7 +15,8 @@
     "fmt": "oxfmt",
     "wrangler": "wrangler",
     "drizzle": "drizzle-kit",
-    "dev:stripe": "stripe listen --forward-to localhost:3000/store/webhook/stripe"
+    "dev:stripe": "stripe listen --forward-to localhost:3000/store/webhook/stripe",
+    "prod:secrets": "wrangler secret bulk .env.wrangler-secrets"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",
@@ -33,7 +34,6 @@
     "tabler-icons-react": "^1.56.0",
     "tailwind-merge": "^3.6.0",
     "tanstack-router-ga4": "^1.6.0",
-    "temporal-polyfill": "^0.3.2",
     "typescript": "^6.0.3",
     "use-shopping-cart": "4.0.0-rc.1",
     "zod": "^4.4.3"
