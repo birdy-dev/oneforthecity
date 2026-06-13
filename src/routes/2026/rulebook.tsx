@@ -11,10 +11,7 @@ const ruleSections: RuleSection[] = [
   {
     number: "01",
     title: "Crew Size",
-    rules: [
-      "Each crew must consist of a minimum of 5 members and a maximum of 10 members.",
-      "Crews must remain the same throughout the competition.",
-    ],
+    rules: ["Each crew must consist of a minimum of 5 members and a maximum of 10 members."],
   },
   {
     number: "02",
