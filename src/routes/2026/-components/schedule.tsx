@@ -49,22 +49,22 @@ const saturday: DaySchedule = {
     },
     {
       time: "1:00PM",
-      title: "Openstyles - Block 1",
+      title: "Breaking - Block 1",
       description: "",
     },
     {
       time: "2:00PM",
-      title: "Breaking - Block 2",
+      title: "Openstyles - Block 2",
       description: "",
     },
     {
       time: "3:00PM",
-      title: "Openstyles - Block 3",
+      title: "Breaking - Block 3",
       description: "",
     },
     {
       time: "4:00PM",
-      title: "Breaking - Block 4",
+      title: "Openstyles - Block 4",
       description: "",
     },
     {
@@ -99,32 +99,32 @@ const sunday: DaySchedule = {
     },
     {
       time: "1:00PM",
-      title: "Openstyles - Top 8",
-      description: "",
-    },
-    {
-      time: "2:00PM",
       title: "Breaking - Top 8",
       description: "",
     },
     {
-      time: "3:00PM",
-      title: "Openstyles - Top 4",
+      time: "2:00PM",
+      title: "Openstyles - Top 8",
       description: "",
     },
     {
-      time: "3:30PM",
+      time: "3:00PM",
       title: "Breaking - Top 4",
       description: "",
     },
     {
+      time: "3:30PM",
+      title: "Openstyles - Top 4",
+      description: "",
+    },
+    {
       time: "4:00PM",
-      title: "Openstyles - Finals",
+      title: "Breaking - Finals",
       description: "",
     },
     {
       time: "4:15PM",
-      title: "Breaking - Finals",
+      title: "Openstyles - Finals",
       description: "",
     },
   ],
