@@ -22,11 +22,10 @@ import {
   setOrderFulfilled,
 } from "@/utils/store_inventory";
 
-const migrationSql = ["0000_store_admin.sql", "0001_blue_embroidered_inventory.sql"]
-  .map((migration) =>
-    readFileSync(new URL(`../../../drizzle/${migration}`, import.meta.url), "utf8"),
-  )
-  .join("\n");
+const migrationSql = readFileSync(
+  new URL("../../../drizzle/0000_store.sql", import.meta.url),
+  "utf8",
+);
 
 beforeEach(() => {
   dbState.sqlite = new Database(":memory:");

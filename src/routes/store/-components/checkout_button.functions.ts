@@ -5,6 +5,8 @@ import { z } from "zod";
 
 import { getInventoryRows } from "@/utils/store_inventory";
 import { STRIPE_STORE_SESSION_SOURCE } from "@/utils/stripe_store";
+import { getUnavailableInventoryMessage } from "./checkout_inventory";
+import { getPresaleCheckoutExpiration, getStripeCheckoutIdempotencyKey } from "./checkout_policy";
 import { getProductById, hasProductSize } from "./products";
 
 const checkoutCartItemSchema = z.object({
@@ -44,6 +46,7 @@ function getAbsoluteImageUrl(image: string, imageOrigin: string) {
 }
 
 const createCheckoutSessionInputSchema = z.object({
+  checkoutAttemptId: z.uuid(),
   cartItems: z
     .array(checkoutCartItemSchema)
     .min(1, {
@@ -61,7 +64,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       throw new Error("Missing STRIPE_SECRET_KEY environment variable.");
     }
 
-    const { cartItems } = data;
+    const { cartItems, checkoutAttemptId } = data;
     const { origin } = new URL(getRequest().url);
     const stripeImageOrigin = getStripeImageOrigin(origin);
     const inventory = await getInventoryRows();
@@ -72,15 +75,16 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       requestedQuantities.set(key, (requestedQuantities.get(key) ?? 0) + item.quantity);
     }
 
-    for (const [key, quantity] of requestedQuantities) {
-      const [productId, size] = key.split("::");
-      const inventoryRow = inventory.find(
-        (row) => row.productId === productId && row.size === size,
-      );
+    const inventoryError = getUnavailableInventoryMessage(
+      inventory,
+      Array.from(requestedQuantities, ([key, quantity]) => {
+        const [productId, size] = key.split("::");
+        return { productId, size, quantity };
+      }),
+    );
 
-      if (!inventoryRow || quantity > inventoryRow.remainingAvailable) {
-        throw new Error("One or more items in your cart are no longer available.");
-      }
+    if (inventoryError) {
+      throw new Error(inventoryError);
     }
 
     const lineItems = cartItems.map((item) => {
@@ -108,16 +112,28 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     });
 
     const stripe = new Stripe(stripeSecretKey);
+    // Check immediately before the Stripe request so slow inventory/database work cannot cross
+    // the deadline and still create a payable session.
+    const expiresAt = getPresaleCheckoutExpiration(Date.now());
 
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items: lineItems,
-      metadata: {
-        source: STRIPE_STORE_SESSION_SOURCE,
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: "payment",
+        client_reference_id: checkoutAttemptId,
+        expires_at: expiresAt,
+        line_items: lineItems,
+        metadata: {
+          checkout_attempt_id: checkoutAttemptId,
+          source: STRIPE_STORE_SESSION_SOURCE,
+        },
+        payment_method_types: ["card"],
+        success_url: `${origin}/store/success`,
+        cancel_url: `${origin}/store/cart`,
       },
-      success_url: `${origin}/store/success`,
-      cancel_url: `${origin}/store/cart`,
-    });
+      {
+        idempotencyKey: getStripeCheckoutIdempotencyKey(checkoutAttemptId),
+      },
+    );
 
     if (!session.url) {
       throw new Error("Stripe did not return a checkout URL.");

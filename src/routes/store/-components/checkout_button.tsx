@@ -1,10 +1,17 @@
 import { buttonStyles } from "@/components/Button";
 import { cn } from "@/utils/cn";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useShoppingCart } from "use-shopping-cart";
 
 import { createCheckoutSession } from "./checkout_button.functions";
+import {
+  beginCheckout,
+  finishCheckout,
+  getOrCreateCheckoutAttemptId,
+  subscribeToCheckoutPageRestore,
+  withCheckoutTimeout,
+} from "./checkout_attempt";
 
 type CheckoutCartEntry = {
   productId?: string;
@@ -16,9 +23,23 @@ export function CheckoutButton() {
   const { cartCount, cartDetails, redirectToCheckout } = useShoppingCart();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isCheckoutPending = useRef(false);
   const createCheckoutSessionFn = useServerFn(createCheckoutSession);
 
+  useEffect(
+    () =>
+      subscribeToCheckoutPageRestore(() => {
+        isCheckoutPending.current = false;
+        setIsLoading(false);
+      }),
+    [],
+  );
+
   const handleCheckout = async () => {
+    if (!beginCheckout(isCheckoutPending)) {
+      return;
+    }
+
     try {
       setIsLoading(true);
       setErrorMessage(null);
@@ -40,14 +61,18 @@ export function CheckoutButton() {
             typeof item.size === "string",
         );
 
-      const { sessionUrl } = await createCheckoutSessionFn({
-        data: { cartItems },
-      });
+      const checkoutAttemptId = getOrCreateCheckoutAttemptId(cartItems, window.sessionStorage);
+      const { sessionUrl } = await withCheckoutTimeout(
+        createCheckoutSessionFn({
+          data: { cartItems, checkoutAttemptId },
+        }),
+      );
 
       await redirectToCheckout(sessionUrl);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Unable to start checkout.");
     } finally {
+      finishCheckout(isCheckoutPending);
       setIsLoading(false);
     }
   };

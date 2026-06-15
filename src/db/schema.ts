@@ -73,7 +73,14 @@ export const orderItems = sqliteTable(
     unitAmount: integer("unit_amount").notNull(),
     currency: text("currency").notNull(),
   },
-  (table) => [index("order_items_product_size_idx").on(table.productId, table.size)],
+  (table) => [
+    index("order_items_product_size_idx").on(table.productId, table.size),
+    uniqueIndex("order_items_order_product_size_idx").on(
+      table.orderId,
+      table.productId,
+      table.size,
+    ),
+  ],
 );
 
 export const ordersRelations = relations(orders, ({ many }) => ({

@@ -146,15 +146,20 @@ function insertOrderItems(
   orderId: number,
   lineItems: StripeOrderLineItem[],
 ) {
-  return db.insert(orderItems).values(
-    lineItems.map((item) => ({
-      orderId,
-      productId: item.productId,
-      productName: item.productName,
-      size: item.size,
-      quantity: item.quantity,
-      unitAmount: item.unitAmount,
-      currency: item.currency,
-    })),
-  );
+  return db
+    .insert(orderItems)
+    .values(
+      lineItems.map((item) => ({
+        orderId,
+        productId: item.productId,
+        productName: item.productName,
+        size: item.size,
+        quantity: item.quantity,
+        unitAmount: item.unitAmount,
+        currency: item.currency,
+      })),
+    )
+    .onConflictDoNothing({
+      target: [orderItems.orderId, orderItems.productId, orderItems.size],
+    });
 }

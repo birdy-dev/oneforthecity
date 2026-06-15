@@ -4,6 +4,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useShoppingCart } from "use-shopping-cart";
 
+import { clearCheckoutAttempt } from "./-components/checkout_attempt";
+
 export const Route = createFileRoute("/store/success")({
   component: SuccessPage,
 });
@@ -13,6 +15,7 @@ function SuccessPage() {
 
   useEffect(() => {
     clearCart();
+    clearCheckoutAttempt(window.sessionStorage);
   }, [clearCart]);
 
   return (

@@ -3,12 +3,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 
-import {
-  inventoryAdjustments,
-  inPersonSales,
-  orderItems,
-  orders,
-} from "@/db/schema";
+import { inventoryAdjustments, inPersonSales, orderItems, orders } from "@/db/schema";
 
 const dbState = vi.hoisted(() => ({
   db: undefined as any,
@@ -38,7 +33,7 @@ vi.mock("stripe", () => ({
 import { createPaidOrderFromCheckoutSession } from "@/utils/stripe_orders";
 
 const migrationSql = readFileSync(
-  new URL("../../../drizzle/0000_store_admin.sql", import.meta.url),
+  new URL("../../../drizzle/0000_store.sql", import.meta.url),
   "utf8",
 );
 
@@ -160,6 +155,51 @@ describe("Stripe store order creation", () => {
 
     expect(firstResult).toMatchObject({ created: true });
     expect(secondResult).toEqual({ created: false, reason: "duplicate" });
+    expect(await dbState.db.select().from(orders)).toHaveLength(1);
+    expect(await dbState.db.select().from(orderItems)).toHaveLength(1);
+  });
+
+  it("deduplicates concurrent paid webhooks for the same Stripe session", async () => {
+    let releaseLineItems: (() => void) | undefined;
+    const lineItemsReady = new Promise<void>((resolve) => {
+      releaseLineItems = resolve;
+    });
+    stripeState.listLineItems.mockImplementation(async () => {
+      await lineItemsReady;
+      return {
+        data: [
+          {
+            id: "li_concurrent",
+            quantity: 1,
+            price: {
+              unit_amount: 2499,
+              currency: "cad",
+              product: {
+                metadata: {
+                  product_id: "classic-tee",
+                  size: "L",
+                },
+              },
+            },
+          },
+        ],
+      };
+    });
+    const session = {
+      id: "cs_concurrent",
+      payment_status: "paid",
+      created: 1_786_120_000,
+      payment_intent: "pi_concurrent",
+      customer_email: "buyer@example.com",
+    } as any;
+
+    const results = Promise.all([
+      createPaidOrderFromCheckoutSession(session),
+      createPaidOrderFromCheckoutSession(session),
+    ]);
+    releaseLineItems?.();
+    await results;
+
     expect(await dbState.db.select().from(orders)).toHaveLength(1);
     expect(await dbState.db.select().from(orderItems)).toHaveLength(1);
   });
