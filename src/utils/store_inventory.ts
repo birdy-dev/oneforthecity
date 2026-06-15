@@ -54,6 +54,7 @@ export type AdminOrderItem = {
 export type AdminDashboardData = {
   inventory: InventoryRow[];
   unfulfilledOrders: AdminOrder[];
+  fulfilledOrders: AdminOrder[];
   searchResults: AdminOrder[];
 };
 
@@ -173,13 +174,17 @@ export async function getInventoryRows(): Promise<InventoryRow[]> {
 }
 
 export async function getAdminDashboard(searchEmail?: string): Promise<AdminDashboardData> {
-  const [inventory, unfulfilledOrders, searchResults] = await Promise.all([
-    getInventoryRows(),
-    getOrders({ fulfilled: false }),
-    searchEmail ? getOrders({ email: searchEmail, limit: 25 }) : Promise.resolve([]),
-  ]);
+  const [inventory, allOrders] = await Promise.all([getInventoryRows(), getOrders({})]);
+  const unfulfilledOrders = allOrders.filter((order) => !order.fulfilled);
+  const fulfilledOrders = allOrders.filter((order) => order.fulfilled);
+  const emailSearch = searchEmail?.trim().toLowerCase();
+  const searchResults = emailSearch
+    ? allOrders
+        .filter((order) => order.customerEmail.toLowerCase().includes(emailSearch))
+        .slice(0, 25)
+    : [];
 
-  return { inventory, unfulfilledOrders, searchResults };
+  return { inventory, unfulfilledOrders, fulfilledOrders, searchResults };
 }
 
 export async function getOrders(options: {

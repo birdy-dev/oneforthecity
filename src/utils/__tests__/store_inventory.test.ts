@@ -3,12 +3,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 
-import {
-  inventoryAdjustments,
-  inPersonSales,
-  orderItems,
-  orders,
-} from "@/db/schema";
+import { inventoryAdjustments, inPersonSales, orderItems, orders } from "@/db/schema";
 
 const dbState = vi.hoisted(() => ({
   db: undefined as any,
@@ -27,10 +22,11 @@ import {
   setOrderFulfilled,
 } from "@/utils/store_inventory";
 
-const migrationSql = readFileSync(
-  new URL("../../../drizzle/0000_store_admin.sql", import.meta.url),
-  "utf8",
-);
+const migrationSql = ["0000_store_admin.sql", "0001_blue_embroidered_inventory.sql"]
+  .map((migration) =>
+    readFileSync(new URL(`../../../drizzle/${migration}`, import.meta.url), "utf8"),
+  )
+  .join("\n");
 
 beforeEach(() => {
   dbState.sqlite = new Database(":memory:");
@@ -114,9 +110,7 @@ describe("store inventory admin data", () => {
     });
 
     let rows = await getInventoryRows();
-    let mediumClassic = rows.find(
-      (row) => row.productId === "classic-tee" && row.size === "M",
-    );
+    let mediumClassic = rows.find((row) => row.productId === "classic-tee" && row.size === "M");
     expect(mediumClassic).toMatchObject({
       reservedOnline: 3,
       onlineFulfilled: 0,
@@ -167,6 +161,23 @@ describe("store inventory admin data", () => {
     const dashboard = await getAdminDashboard();
 
     expect(dashboard.unfulfilledOrders).toHaveLength(12);
+  });
+
+  it("returns fulfilled orders on the admin dashboard without an email search", async () => {
+    await insertOrder({
+      stripeSessionId: "cs_fulfilled_visible",
+      fulfilled: true,
+    });
+
+    const dashboard = await getAdminDashboard();
+
+    expect(dashboard.fulfilledOrders).toHaveLength(1);
+    expect(dashboard.fulfilledOrders[0]).toMatchObject({
+      stripeSessionId: "cs_fulfilled_visible",
+      fulfilled: true,
+    });
+    expect(dashboard.unfulfilledOrders).toHaveLength(0);
+    expect(dashboard.searchResults).toHaveLength(0);
   });
 });
 

@@ -120,7 +120,7 @@ describe("Stripe store order creation", () => {
     expect(itemRows[0]).toMatchObject({
       orderId: orderRows[0]?.id,
       productId: "vol-6-tee",
-      productName: "Vol.6 Limited Edition Tee",
+      productName: "Vol. 6 Limited Box Tee",
       size: "M",
       quantity: 2,
       unitAmount: 2999,

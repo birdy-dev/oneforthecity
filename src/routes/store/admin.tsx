@@ -144,6 +144,14 @@ function StoreAdminPage() {
               scrollAfter={10}
               title="Unfulfilled Online Orders"
             />
+            <OrdersSection
+              emptyLabel="No fulfilled orders."
+              isBusy={isBusy}
+              onFulfillmentChange={handleFulfillment}
+              orders={dashboard.fulfilledOrders}
+              scrollAfter={10}
+              title="Fulfilled Online Orders"
+            />
             {searchEmail ? (
               <OrdersSection
                 emptyLabel="No paid orders found for that email."
