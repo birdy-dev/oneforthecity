@@ -17,6 +17,7 @@ import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as R2026IndexRouteImport } from './routes/2026/index'
 import { Route as StoreSuccessRouteImport } from './routes/store/success'
 import { Route as StoreProductsRouteImport } from './routes/store/products'
+import { Route as StoreHealthRouteImport } from './routes/store/health'
 import { Route as StoreCartRouteImport } from './routes/store/cart'
 import { Route as StoreAdminRouteImport } from './routes/store/admin'
 import { Route as R2026RulebookRouteImport } from './routes/2026/rulebook'
@@ -63,6 +64,11 @@ const StoreProductsRoute = StoreProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => StoreRoute,
 } as any)
+const StoreHealthRoute = StoreHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => StoreRoute,
+} as any)
 const StoreCartRoute = StoreCartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/2026/rulebook': typeof R2026RulebookRoute
   '/store/admin': typeof StoreAdminRoute
   '/store/cart': typeof StoreCartRoute
+  '/store/health': typeof StoreHealthRoute
   '/store/products': typeof StoreProductsRoute
   '/store/success': typeof StoreSuccessRoute
   '/2026/': typeof R2026IndexRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/2026/rulebook': typeof R2026RulebookRoute
   '/store/admin': typeof StoreAdminRoute
   '/store/cart': typeof StoreCartRoute
+  '/store/health': typeof StoreHealthRoute
   '/store/products': typeof StoreProductsRoute
   '/store/success': typeof StoreSuccessRoute
   '/2026': typeof R2026IndexRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/2026/rulebook': typeof R2026RulebookRoute
   '/store/admin': typeof StoreAdminRoute
   '/store/cart': typeof StoreCartRoute
+  '/store/health': typeof StoreHealthRoute
   '/store/products': typeof StoreProductsRoute
   '/store/success': typeof StoreSuccessRoute
   '/2026/': typeof R2026IndexRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/2026/rulebook'
     | '/store/admin'
     | '/store/cart'
+    | '/store/health'
     | '/store/products'
     | '/store/success'
     | '/2026/'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/2026/rulebook'
     | '/store/admin'
     | '/store/cart'
+    | '/store/health'
     | '/store/products'
     | '/store/success'
     | '/2026'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/2026/rulebook'
     | '/store/admin'
     | '/store/cart'
+    | '/store/health'
     | '/store/products'
     | '/store/success'
     | '/2026/'
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreProductsRouteImport
       parentRoute: typeof StoreRoute
     }
+    '/store/health': {
+      id: '/store/health'
+      path: '/health'
+      fullPath: '/store/health'
+      preLoaderRoute: typeof StoreHealthRouteImport
+      parentRoute: typeof StoreRoute
+    }
     '/store/cart': {
       id: '/store/cart'
       path: '/cart'
@@ -289,6 +308,7 @@ declare module '@tanstack/react-router' {
 interface StoreRouteChildren {
   StoreAdminRoute: typeof StoreAdminRoute
   StoreCartRoute: typeof StoreCartRoute
+  StoreHealthRoute: typeof StoreHealthRoute
   StoreProductsRoute: typeof StoreProductsRoute
   StoreSuccessRoute: typeof StoreSuccessRoute
   StoreIndexRoute: typeof StoreIndexRoute
@@ -299,6 +319,7 @@ interface StoreRouteChildren {
 const StoreRouteChildren: StoreRouteChildren = {
   StoreAdminRoute: StoreAdminRoute,
   StoreCartRoute: StoreCartRoute,
+  StoreHealthRoute: StoreHealthRoute,
   StoreProductsRoute: StoreProductsRoute,
   StoreSuccessRoute: StoreSuccessRoute,
   StoreIndexRoute: StoreIndexRoute,
