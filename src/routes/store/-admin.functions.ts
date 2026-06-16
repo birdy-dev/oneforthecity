@@ -43,14 +43,14 @@ const recordInventoryAdjustmentSchema = z.object({
 });
 
 export const getAdminDashboard = createServerFn({ method: "GET" })
-  .inputValidator(getAdminDashboardSchema)
+  .validator(getAdminDashboardSchema)
   .handler(async ({ data }) => {
     requireAdminAuth();
     return getAdminDashboardData(data.searchEmail || undefined);
   });
 
 export const updateOrderFulfillment = createServerFn({ method: "POST" })
-  .inputValidator(setOrderFulfilledSchema)
+  .validator(setOrderFulfilledSchema)
   .handler(async ({ data }) => {
     requireAdminAuth();
     await setOrderFulfilled(data.orderId, data.fulfilled);
@@ -58,7 +58,7 @@ export const updateOrderFulfillment = createServerFn({ method: "POST" })
   });
 
 export const createInPersonSale = createServerFn({ method: "POST" })
-  .inputValidator(recordInPersonSaleSchema)
+  .validator(recordInPersonSaleSchema)
   .handler(async ({ data }) => {
     requireAdminAuth();
     await recordInPersonSale(data);
@@ -66,7 +66,7 @@ export const createInPersonSale = createServerFn({ method: "POST" })
   });
 
 export const createInventoryAdjustment = createServerFn({ method: "POST" })
-  .inputValidator(recordInventoryAdjustmentSchema)
+  .validator(recordInventoryAdjustmentSchema)
   .handler(async ({ data }) => {
     requireAdminAuth();
     await recordInventoryAdjustment(data);

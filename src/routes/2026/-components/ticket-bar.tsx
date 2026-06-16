@@ -4,10 +4,53 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   GraduationCapIcon,
+  type LucideIcon,
   TicketIcon,
   UserPlusIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+
+type TicketAction = {
+  label: string;
+  href: string;
+  lumaEventId?: string;
+  Icon: LucideIcon;
+};
+
+const ticketActions: TicketAction[] = [
+  {
+    label: "Spectator Tickets",
+    href: "https://www.ticketweb.ca/event/one-for-the-city-pawn-shop-live-formally-known-tickets/14839363",
+    Icon: TicketIcon,
+  },
+  {
+    label: "Crew Registration",
+    href: "https://luma.com/event/evt-g8NXPtx9gvq9MaF",
+    lumaEventId: "evt-g8NXPtx9gvq9MaF",
+    Icon: UserPlusIcon,
+  },
+];
+
+const workshopActions: TicketAction[] = [
+  {
+    label: "Rockforce & Storm",
+    href: "https://luma.com/inka0iev",
+    lumaEventId: "evt-R8uR2IUndhQDhi0",
+    Icon: GraduationCapIcon,
+  },
+  {
+    label: "Lady C",
+    href: "https://luma.com/2zm0ysqo",
+    lumaEventId: "evt-29xTiIVY7HxDI9v",
+    Icon: GraduationCapIcon,
+  },
+  {
+    label: "Rubix",
+    href: "https://luma.com/vj3ri6go",
+    lumaEventId: "evt-RpCdBcHaJYpLSRv",
+    Icon: GraduationCapIcon,
+  },
+];
 
 declare global {
   interface Window {
@@ -40,58 +83,53 @@ export function TicketBar() {
   }, []);
 
   const ticketButtonClass = cn(buttonStyles, "w-full rounded-full px-4 py-2 text-sm sm:px-4");
+  const workshopButtonClass = cn(
+    buttonStyles,
+    "w-full rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 sm:px-4",
+  );
+
+  const actionLinks = (actions: TicketAction[], isMobile = false, variant: "ticket" | "workshop") => (
+    <>
+      {actions.map((action, index) => {
+        const Icon = action.Icon;
+
+        return (
+          <div
+            key={action.label}
+            className={cn(
+              "flex flex-nowrap overflow-clip rounded-full whitespace-nowrap",
+              isMobile && "transition-opacity duration-300 ease-in",
+            )}
+            style={
+              isMobile
+                ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: `${10 + index * 50}ms` }
+                : undefined
+            }
+          >
+            <a
+              className={variant === "workshop" ? workshopButtonClass : ticketButtonClass}
+              href={action.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-luma-action={action.lumaEventId ? "checkout" : undefined}
+              data-luma-event-id={action.lumaEventId}
+            >
+              <Icon className="mr-2 shrink-0" size={16} />
+              {action.label}
+            </a>
+          </div>
+        );
+      })}
+    </>
+  );
 
   const ticketLinks = (isMobile = false) => (
     <>
-      <div
-        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
-        style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "10ms" } : undefined}
-      >
-        <a
-          className={ticketButtonClass}
-          href="https://luma.com/event/evt-g8NXPtx9gvq9MaF"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-luma-action="checkout"
-          data-luma-event-id="evt-g8NXPtx9gvq9MaF"
-        >
-          <UserPlusIcon className="mr-2" size={16} />
-          Crew Registration
-        </a>
+      <div className="grid gap-3 sm:grid-cols-2 xl:flex xl:flex-row">
+        {actionLinks(ticketActions, isMobile, "ticket")}
       </div>
-
-      <div
-        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
-        style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "60ms" } : undefined}
-      >
-        <a
-          className={ticketButtonClass}
-          href="https://luma.com/event/evt-R8uR2IUndhQDhi0"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-luma-action="checkout"
-          data-luma-event-id="evt-R8uR2IUndhQDhi0"
-        >
-          <GraduationCapIcon className="mr-2" size={16} />
-          Workshops
-        </a>
-      </div>
-
-      <div
-        className={cn(isMobile && "transition-opacity duration-300 ease-in")}
-        style={isMobile ? { opacity: isMobileOpen ? 1 : 0, transitionDelay: "110ms" } : undefined}
-      >
-        <div className="flex flex-nowrap overflow-clip rounded-full whitespace-nowrap">
-          <a
-            className={cn(buttonStyles, "w-full rounded-full py-2 text-sm sm:px-4")}
-            href="https://www.ticketweb.ca/event/one-for-the-city-pawn-shop-live-formally-known-tickets/14839363"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <TicketIcon className="mr-2" size={16} />
-            Spectator Tickets
-          </a>
-        </div>
+      <div className="grid gap-3 border-t border-gray-300/70 pt-3 sm:grid-cols-3 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0 xl:flex xl:flex-row">
+        {actionLinks(workshopActions, isMobile, "workshop")}
       </div>
     </>
   );
@@ -126,17 +164,17 @@ export function TicketBar() {
           id="mobile-ticket-links"
           className="overflow-hidden rounded-3xl border border-white/20 bg-white/70 shadow-lg backdrop-blur-md transition-all duration-300 ease-in sm:hidden"
           style={{
-            maxHeight: isMobileOpen ? "16rem" : "0rem",
+            maxHeight: isMobileOpen ? "24rem" : "0rem",
             opacity: isMobileOpen ? 1 : 0,
             padding: isMobileOpen ? "0.75rem" : "0rem",
             borderWidth: isMobileOpen ? "1px" : "0px",
           }}
           aria-hidden={!isMobileOpen}
         >
-          <div className="flex flex-col gap-4">{ticketLinks(true)}</div>
+          <div className="flex flex-col gap-3">{ticketLinks(true)}</div>
         </div>
 
-        <div className="hidden flex-row items-end gap-6 rounded-3xl border border-white/20 bg-white/70 p-4 shadow-lg backdrop-blur-md sm:flex">
+        <div className="hidden items-center gap-3 rounded-3xl border border-white/20 bg-white/70 p-4 shadow-lg backdrop-blur-md sm:flex sm:flex-col md:flex-row xl:gap-4">
           {ticketLinks()}
         </div>
       </div>

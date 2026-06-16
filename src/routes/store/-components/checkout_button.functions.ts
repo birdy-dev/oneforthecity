@@ -56,7 +56,7 @@ const createCheckoutSessionInputSchema = z.object({
 });
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
-  .inputValidator(createCheckoutSessionInputSchema)
+  .validator(createCheckoutSessionInputSchema)
   .handler(async ({ data }) => {
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 

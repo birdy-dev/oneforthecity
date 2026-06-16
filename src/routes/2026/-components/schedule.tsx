@@ -43,6 +43,12 @@ const saturday: DaySchedule = {
   summary: "Workshops, Prelims & Party",
   schedule: [
     {
+      time: "10:30AM–11:30AM",
+      title: "LADY C POPPING WORKSHOP",
+      description: "New Roots Breaking Studio",
+      link: "https://luma.com/2zm0ysqo",
+    },
+    {
       time: "12:00PM",
       title: "Doors open",
       description: "",
