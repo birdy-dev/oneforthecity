@@ -19,6 +19,17 @@ export function Hero() {
             <br />
             <span className="line-clamp-1 text-3xl md:text-5xl">Vol. 6</span>
           </h1>
+          <p className="px-1 text-sm font-medium text-gray-500 md:text-base">
+            Co-hosted with{" "}
+            <a
+              className="font-semibold text-gray-900 underline underline-offset-4 transition-colors hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900"
+              href="https://freestylemovement.ca"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Freestyle Movement
+            </a>
+          </p>
           <p className="inline-flex flex-wrap items-center px-1 text-sm font-medium text-gray-500 md:text-base">
             Breaking
             <DotIcon />
