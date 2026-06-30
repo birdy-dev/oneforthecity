@@ -9,7 +9,6 @@ type DaySchedule = {
     time: string;
     title: string;
     description: string;
-    link?: string;
   }[];
 };
 
@@ -24,14 +23,12 @@ const friday: DaySchedule = {
       title: "ROCKFORCE CREW WORKSHOP",
       description:
         "Breaking foundations, battle tactics, and real crew knowledge — from elements to longevity.",
-      link: "https://luma.com/inka0iev",
     },
     {
       time: "8PM–10PM",
       title: "STORM’S KNOWLEDGE WORKSHOP",
       description:
         "International criteria, battle evaluation, judging insight, conversations, Q&A, and community exchange.",
-      link: "https://luma.com/inka0iev",
     },
   ],
 };
@@ -46,7 +43,6 @@ const saturday: DaySchedule = {
       time: "10:30AM–11:30AM",
       title: "LADY C POPPING WORKSHOP",
       description: "New Roots Breaking Studio",
-      link: "https://luma.com/2zm0ysqo",
     },
     {
       time: "12:30PM",
@@ -96,7 +92,6 @@ const sunday: DaySchedule = {
       time: "10:30AM–12:00PM",
       title: "RUBIX HIPHOP WORKSHOP",
       description: "New Roots Breaking Studio",
-      link: "https://luma.com/vj3ri6go",
     },
     {
       time: "12:30PM",
@@ -196,18 +191,7 @@ function Day({ weekday, summary, month, date, schedule }: DaySchedule) {
             <div key={`${item.time}-${item.title}`} className="space-y-1 border-t py-4 first:mt-4">
               <span className="text-sm font-medium text-gray-500">{item.time}</span>
               <div>
-                {item.link ? (
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block font-semibold underline decoration-gray-300 underline-offset-4 transition hover:decoration-current"
-                  >
-                    {item.title}
-                  </a>
-                ) : (
-                  <span className="block font-semibold">{item.title}</span>
-                )}
+                <span className="block font-semibold">{item.title}</span>
                 <p className="text-sm text-gray-600">{item.description}</p>
               </div>
             </div>

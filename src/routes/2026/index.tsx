@@ -5,9 +5,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { People } from "./-components/people";
 import { Schedule } from "./-components/schedule";
 import { Hero } from "./-components/hero";
-import { Hotels } from "./-components/hotels";
+import { OrganizingTeam } from "./-components/organizing-team";
 import { BrandInstagram, BrandYoutube } from "tabler-icons-react";
-import { TicketBar } from "./-components/ticket-bar";
 
 export const Route = createFileRoute("/2026/")({
   loader: async () => getStoreEnabled(),
@@ -56,7 +55,6 @@ function RouteComponent() {
         <Hero />
         <Schedule />
         <People />
-        <Hotels />
 
         <section className="mx-auto max-w-5xl space-y-6 font-display text-2xl tracking-tight text-blue-950">
           <h2 className="font-display text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl">
@@ -73,9 +71,9 @@ function RouteComponent() {
             sessions and workshops to more than four cities in Canada over the past three years.
           </p>
         </section>
-      </div>
 
-      <TicketBar />
+        <OrganizingTeam />
+      </div>
     </>
   );
 }
