@@ -25,7 +25,11 @@ const volunteers: TeamMember[] = [
   { role: "Volunteer", name: "Jasmine Khokhar" },
   { role: "Volunteer", name: "Jeme Magallones" },
   { role: "Volunteer", name: "Kamsie Osadebe" },
-  { role: "Volunteer", name: "Kate He" },
+  {
+    role: "Volunteer",
+    name: "Kate Xinyi He",
+    link: "https://www.instagram.com/hekatex_x",
+  },
   { role: "Volunteer", name: "Kit Padron" },
   { role: "Volunteer", name: "Lin Yang" },
   { role: "Volunteer", name: "Nardos" },
@@ -35,7 +39,11 @@ const volunteers: TeamMember[] = [
   { role: "Volunteer", name: "Sara Sereda" },
   { role: "Volunteer", name: "Thu Le" },
   { role: "Volunteer", name: "Vaishnavi Bhawsar" },
-  { role: "Volunteer", name: "Zareef Hasan" },
+  {
+    role: "Volunteer",
+    name: "Zareef Hasan",
+    link: "https://www.instagram.com/zareef_hasan38",
+  },
 ];
 
 export function OrganizingTeam() {
