@@ -40,7 +40,7 @@ const volunteers: TeamMember[] = [
 
 export function OrganizingTeam() {
   return (
-    <section className="mx-auto max-w-5xl space-y-14 text-center" id="organizing-team">
+    <section className="mx-auto max-w-5xl space-y-14 text-center" id="team">
       <div className="mx-auto max-w-3xl space-y-3">
         <h2 className="font-display text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl">
           Organizing Team & Volunteers
