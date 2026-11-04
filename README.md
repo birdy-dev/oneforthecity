@@ -1,6 +1,6 @@
 # Development
 
-Use pnpm 12.4.1. pnpm manages the project's Node.js runtime, pinned to 26.13.0
+Use pnpm 12.16.1. pnpm manages the project's Node.js runtime, pinned to 26.13.0
 in `package.json` and verified by checksums in `pnpm-lock.yaml`.
 
 ```sh
