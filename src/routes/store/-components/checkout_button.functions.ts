@@ -126,7 +126,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           checkout_attempt_id: checkoutAttemptId,
           source: STRIPE_STORE_SESSION_SOURCE,
         },
-        payment_method_types: ["card"],
+        allowed_payment_method_types: ["card"],
         success_url: `${origin}/store/success`,
         cancel_url: `${origin}/store/cart`,
       },

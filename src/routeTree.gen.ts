@@ -9,44 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StoreRouteImport } from './routes/store'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TimerIndexRouteImport } from './routes/timer/index'
-import { Route as StoreIndexRouteImport } from './routes/store/index'
-import { Route as HomeIndexRouteImport } from './routes/home/index'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as R2026IndexRouteImport } from './routes/2026/index'
-import { Route as StoreSuccessRouteImport } from './routes/store/success'
-import { Route as StoreProductsRouteImport } from './routes/store/products'
-import { Route as StoreHealthRouteImport } from './routes/store/health'
-import { Route as StoreCartRouteImport } from './routes/store/cart'
-import { Route as StoreAdminRouteImport } from './routes/store/admin'
 import { Route as R2026RulebookRouteImport } from './routes/2026/rulebook'
-import { Route as StoreWebhookStripeRouteImport } from './routes/store/webhook/stripe'
+import { Route as HomeIndexRouteImport } from './routes/home/index'
+import { Route as StoreIndexRouteImport } from './routes/store/index'
+import { Route as StoreAdminRouteImport } from './routes/store/admin'
+import { Route as StoreCartRouteImport } from './routes/store/cart'
+import { Route as StoreHealthRouteImport } from './routes/store/health'
+import { Route as StoreProductsRouteImport } from './routes/store/products'
+import { Route as StoreSuccessRouteImport } from './routes/store/success'
+import { Route as TimerIndexRouteImport } from './routes/timer/index'
 import { Route as StoreProductIdRouteImport } from './routes/store/product.$id'
+import { Route as StoreWebhookStripeRouteImport } from './routes/store/webhook/stripe'
 
-const StoreRoute = StoreRouteImport.update({
-  id: '/store',
-  path: '/store',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TimerIndexRoute = TimerIndexRouteImport.update({
-  id: '/timer/',
-  path: '/timer/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StoreIndexRoute = StoreIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StoreRoute,
-} as any)
-const HomeIndexRoute = HomeIndexRouteImport.update({
-  id: '/home/',
-  path: '/home/',
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const R2026IndexRoute = R2026IndexRouteImport.update({
@@ -54,24 +39,19 @@ const R2026IndexRoute = R2026IndexRouteImport.update({
   path: '/2026/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StoreSuccessRoute = StoreSuccessRouteImport.update({
-  id: '/success',
-  path: '/success',
-  getParentRoute: () => StoreRoute,
+const R2026RulebookRoute = R2026RulebookRouteImport.update({
+  id: '/2026/rulebook',
+  path: '/2026/rulebook',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const StoreProductsRoute = StoreProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
-  getParentRoute: () => StoreRoute,
+const HomeIndexRoute = HomeIndexRouteImport.update({
+  id: '/home/',
+  path: '/home/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const StoreHealthRoute = StoreHealthRouteImport.update({
-  id: '/health',
-  path: '/health',
-  getParentRoute: () => StoreRoute,
-} as any)
-const StoreCartRoute = StoreCartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
+const StoreIndexRoute = StoreIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => StoreRoute,
 } as any)
 const StoreAdminRoute = StoreAdminRouteImport.update({
@@ -79,19 +59,39 @@ const StoreAdminRoute = StoreAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => StoreRoute,
 } as any)
-const R2026RulebookRoute = R2026RulebookRouteImport.update({
-  id: '/2026/rulebook',
-  path: '/2026/rulebook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StoreWebhookStripeRoute = StoreWebhookStripeRouteImport.update({
-  id: '/webhook/stripe',
-  path: '/webhook/stripe',
+const StoreCartRoute = StoreCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => StoreRoute,
+} as any)
+const StoreHealthRoute = StoreHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreProductsRoute = StoreProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreSuccessRoute = StoreSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => StoreRoute,
+} as any)
+const TimerIndexRoute = TimerIndexRouteImport.update({
+  id: '/timer/',
+  path: '/timer/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StoreProductIdRoute = StoreProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreWebhookStripeRoute = StoreWebhookStripeRouteImport.update({
+  id: '/webhook/stripe',
+  path: '/webhook/stripe',
   getParentRoute: () => StoreRoute,
 } as any)
 
@@ -204,13 +204,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -218,25 +211,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/timer/': {
-      id: '/timer/'
-      path: '/timer'
-      fullPath: '/timer/'
-      preLoaderRoute: typeof TimerIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/store/': {
-      id: '/store/'
-      path: '/'
-      fullPath: '/store/'
-      preLoaderRoute: typeof StoreIndexRouteImport
-      parentRoute: typeof StoreRoute
-    }
-    '/home/': {
-      id: '/home/'
-      path: '/home'
-      fullPath: '/home/'
-      preLoaderRoute: typeof HomeIndexRouteImport
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/2026/': {
@@ -246,32 +225,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R2026IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/store/success': {
-      id: '/store/success'
-      path: '/success'
-      fullPath: '/store/success'
-      preLoaderRoute: typeof StoreSuccessRouteImport
-      parentRoute: typeof StoreRoute
+    '/2026/rulebook': {
+      id: '/2026/rulebook'
+      path: '/2026/rulebook'
+      fullPath: '/2026/rulebook'
+      preLoaderRoute: typeof R2026RulebookRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/store/products': {
-      id: '/store/products'
-      path: '/products'
-      fullPath: '/store/products'
-      preLoaderRoute: typeof StoreProductsRouteImport
-      parentRoute: typeof StoreRoute
+    '/home/': {
+      id: '/home/'
+      path: '/home'
+      fullPath: '/home/'
+      preLoaderRoute: typeof HomeIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/store/health': {
-      id: '/store/health'
-      path: '/health'
-      fullPath: '/store/health'
-      preLoaderRoute: typeof StoreHealthRouteImport
-      parentRoute: typeof StoreRoute
-    }
-    '/store/cart': {
-      id: '/store/cart'
-      path: '/cart'
-      fullPath: '/store/cart'
-      preLoaderRoute: typeof StoreCartRouteImport
+    '/store/': {
+      id: '/store/'
+      path: '/'
+      fullPath: '/store/'
+      preLoaderRoute: typeof StoreIndexRouteImport
       parentRoute: typeof StoreRoute
     }
     '/store/admin': {
@@ -281,25 +253,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreAdminRouteImport
       parentRoute: typeof StoreRoute
     }
-    '/2026/rulebook': {
-      id: '/2026/rulebook'
-      path: '/2026/rulebook'
-      fullPath: '/2026/rulebook'
-      preLoaderRoute: typeof R2026RulebookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/store/webhook/stripe': {
-      id: '/store/webhook/stripe'
-      path: '/webhook/stripe'
-      fullPath: '/store/webhook/stripe'
-      preLoaderRoute: typeof StoreWebhookStripeRouteImport
+    '/store/cart': {
+      id: '/store/cart'
+      path: '/cart'
+      fullPath: '/store/cart'
+      preLoaderRoute: typeof StoreCartRouteImport
       parentRoute: typeof StoreRoute
+    }
+    '/store/health': {
+      id: '/store/health'
+      path: '/health'
+      fullPath: '/store/health'
+      preLoaderRoute: typeof StoreHealthRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/products': {
+      id: '/store/products'
+      path: '/products'
+      fullPath: '/store/products'
+      preLoaderRoute: typeof StoreProductsRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/success': {
+      id: '/store/success'
+      path: '/success'
+      fullPath: '/store/success'
+      preLoaderRoute: typeof StoreSuccessRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/timer/': {
+      id: '/timer/'
+      path: '/timer'
+      fullPath: '/timer/'
+      preLoaderRoute: typeof TimerIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/store/product/$id': {
       id: '/store/product/$id'
       path: '/product/$id'
       fullPath: '/store/product/$id'
       preLoaderRoute: typeof StoreProductIdRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/store/webhook/stripe': {
+      id: '/store/webhook/stripe'
+      path: '/webhook/stripe'
+      fullPath: '/store/webhook/stripe'
+      preLoaderRoute: typeof StoreWebhookStripeRouteImport
       parentRoute: typeof StoreRoute
     }
   }

@@ -38,7 +38,7 @@ const migrationSql = readFileSync(
 );
 
 beforeEach(() => {
-  process.env.STRIPE_SECRET_KEY = "sk_test_store";
+  vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_store");
   stripeState.listLineItems.mockReset();
   dbState.sqlite = new Database(":memory:");
   dbState.sqlite.exec(migrationSql);
@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  delete process.env.STRIPE_SECRET_KEY;
+  vi.unstubAllEnvs();
   dbState.sqlite?.close();
   dbState.sqlite = undefined;
   dbState.db = undefined;

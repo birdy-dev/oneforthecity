@@ -3,3 +3,6 @@ allowBuilds:
   esbuild: false
   sharp: false
   workerd: false
+
+overrides:
+  "@esbuild-kit/core-utils>esbuild": ^0.28.2
