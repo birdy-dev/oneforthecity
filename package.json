@@ -3,6 +3,10 @@
   "version": "0.3.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": "^26.13.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -44,7 +48,7 @@
     "@fontsource-variable/inter": "^5.2.8",
     "@tailwindcss/vite": "^4.3.1",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.9.3",
+    "@types/node": "^26.6.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
@@ -59,5 +63,12 @@
     "vitest": "^4.1.8",
     "wrangler": "^4.100.0"
   },
-  "browserslist": "defaults, not ie <= 11"
+  "browserslist": "defaults, not ie <= 11",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.0",
+      "onFail": "download"
+    }
+  }
 }
