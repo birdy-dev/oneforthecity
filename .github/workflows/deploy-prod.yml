@@ -1,0 +1,82 @@
+name: Deploy production
+run-name: Deploy ${{ github.event.release.tag_name }} to production
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.release.prerelease == false && github.event.release.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://oneforthecity.com
+    steps:
+      - name: Validate the latest stable release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_ID: ${{ github.event.release.id }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::Production releases require a stable semver tag, such as v1.2.3."
+            exit 1
+          fi
+          latest_id=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq '.id')
+          if [[ "$latest_id" == "$RELEASE_ID" ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "This release is not marked Latest; skipping deployment." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Check out the release tag
+        if: steps.release.outputs.deploy == 'true'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Install pinned pnpm, Node.js, and dependencies
+        if: steps.release.outputs.deploy == 'true'
+        uses: pnpm/setup@v3
+        with:
+          cache: true
+          require-lockfile: true
+
+      - name: Test
+        if: steps.release.outputs.deploy == 'true'
+        run: pnpm test
+
+      - name: Build
+        if: steps.release.outputs.deploy == 'true'
+        run: pnpm build
+
+      - name: Deploy the latest release
+        if: steps.release.outputs.deploy == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ github.event.release.id }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          latest_id=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq '.id')
+          if [[ "$latest_id" != "$RELEASE_ID" ]]; then
+            echo "A different release is now marked Latest; skipping deployment." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+            echo "::error::Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID for this repository."
+            exit 1
+          fi
+          pnpm exec wrangler deploy

@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Install pinned pnpm, Node.js, and dependencies
+        uses: pnpm/setup@v3
+        with:
+          cache: true
+          require-lockfile: true
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
