@@ -26,4 +26,21 @@
   "vars": {
     "VITE_STRIPE_PUBLISHABLE_KEY": "pk_live_51QpDSDJQN4XeeFbTV8d4bmZtIcoRBLx4rVMBh9opgje47bGdIQhmGFtPxtBZPW1epLKIDUGpo27544HhEE9siEdJ002fEMrDVL",
   },
+  "env": {
+    "preview": {
+      "name": "oneforthecity-preview",
+      "workers_dev": true,
+      "routes": [],
+      "vars": {
+        "VITE_STRIPE_PUBLISHABLE_KEY": "",
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "oneforthecity-preview",
+          "migrations_dir": "drizzle",
+        },
+      ],
+    },
+  },
 }

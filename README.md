@@ -58,6 +58,26 @@ contains this workflow and mark it Latest. Do not move existing release tags.
 GitHub Actions reads the runtime directly from `package.json`; no dashboard
 `NODE_VERSION` or `PNPM_VERSION` overrides are required.
 
+## Preview deployments
+
+Once the workflow is on `main`, open **Actions > Deploy preview > Run workflow**
+and choose the branch to deploy. The manual run tests and builds that ref, applies
+D1 migrations to `oneforthecity-preview`, and deploys the shared
+`oneforthecity-preview` Worker. Wrangler prints the `workers.dev` URL in the
+deploy step. Each run replaces the shared preview deployment.
+
+Before the first run, create a D1 database named `oneforthecity-preview` in the
+target Cloudflare account and enable the account's `workers.dev` subdomain. Make
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` available to the GitHub
+`preview` environment. The token needs permission to deploy the Worker and apply
+migrations to the preview database.
+
+To enable the preview store, set the `PREVIEW_STRIPE_PUBLISHABLE_KEY` GitHub
+environment variable to a `pk_test_` key. Set `STRIPE_SECRET_KEY` to the matching
+Stripe test secret in the preview Worker, and configure the test webhook at
+`/store/webhook/stripe` with its own `STRIPE_WEBHOOK_SECRET`. The preview uses its
+own database and `workers.dev` hostname.
+
 ## Compressing images
 
 ```
