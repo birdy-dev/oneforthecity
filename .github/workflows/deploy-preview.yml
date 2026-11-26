@@ -1,4 +1,5 @@
 name: Deploy preview
+run-name: Deploy ${{ github.ref_name }} to preview
 
 on: workflow_dispatch
 
@@ -17,7 +18,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment: preview
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.url }}
     steps:
       - name: Check out the selected ref
         uses: actions/checkout@v6
@@ -54,6 +57,7 @@ jobs:
           ' dist/server/wrangler.json > /dev/null
 
       - name: Migrate and deploy preview
+        id: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -71,4 +75,18 @@ jobs:
           jq --arg id "$database_id" '.d1_databases[0].database_id = $id' "$config" > "$config.tmp"
           mv "$config.tmp" "$config"
           pnpm exec wrangler d1 migrations apply oneforthecity-preview --config "$config" --remote
-          pnpm exec wrangler deploy --config "$config"
+
+          deploy_output=$(mktemp "$RUNNER_TEMP/wrangler-preview.XXXXXX")
+          WRANGLER_OUTPUT_FILE_PATH="$deploy_output" pnpm exec wrangler deploy --config "$config"
+          if ! preview_url=$(jq -ers '
+            [.[] | select(.type == "deploy" and .worker_name == "oneforthecity-preview") |
+             .targets[]? | select(test("^https://oneforthecity-preview\\.[a-z0-9-]+\\.workers\\.dev$"))]
+            | last | strings
+          ' "$deploy_output"); then
+            echo "::error::Wrangler completed the deploy but did not report the preview Worker URL."
+            exit 1
+          fi
+
+          printf 'url=%s\n' "$preview_url" >> "$GITHUB_OUTPUT"
+          printf '### Preview deployment\n\n[Open preview](%s)\n\nCommit `%s`.\n' \
+            "$preview_url" "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"

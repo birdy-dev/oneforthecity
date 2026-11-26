@@ -63,8 +63,10 @@ GitHub Actions reads the runtime directly from `package.json`; no dashboard
 Once the workflow is on `main`, open **Actions > Deploy preview > Run workflow**
 and choose the branch to deploy. The manual run tests and builds that ref, applies
 D1 migrations to `oneforthecity-preview`, and deploys the shared
-`oneforthecity-preview` Worker. Wrangler prints the `workers.dev` URL in the
-deploy step. Each run replaces the shared preview deployment.
+`oneforthecity-preview` Worker. The workflow run summary and the GitHub `preview`
+deployment both link to the live `workers.dev` URL. Each run replaces the shared
+preview deployment, so links from older runs still open the currently deployed
+branch.
 
 Before the first run, create a D1 database named `oneforthecity-preview` in the
 target Cloudflare account and enable the account's `workers.dev` subdomain. Make
