@@ -1,7 +1,6 @@
 # Development
 
-Use pnpm 12.16.1. pnpm manages the project's Node.js runtime, pinned to 26.13.0
-in `package.json` and verified by checksums in `pnpm-lock.yaml`.
+Use the pnpm and Node.js versions pinned in `package.json`.
 
 ```sh
 pnpm install
@@ -10,9 +9,9 @@ pnpm dev
 ```
 
 Run project commands through pnpm so they use the managed Node.js version.
-To upgrade to the newest Node.js 26 release, run `pnpm runtime set node 26`
-and update `.node-version` to the resolved version. Commit the updated manifest,
-lockfile, and `.node-version` together.
+To upgrade Node.js, run `pnpm runtime set node <major>` and update
+`.node-version` to match. Commit the manifest, lockfile, and `.node-version`
+together.
 
 Cloudflare Workers runs the deployed app; this Node.js version is for local
 development and build tools.
@@ -26,8 +25,7 @@ development and build tools.
 
 ### Production
 
-- Publish a stable GitHub release marked **Latest** from `main`, using a tag like
-  `v1.2.3`.
+- Publish a GitHub release marked **Latest** from `main` using a stable SemVer tag.
 - Check **Actions > Deploy production**.
 
 ### Preview
