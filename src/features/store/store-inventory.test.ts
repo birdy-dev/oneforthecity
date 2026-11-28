@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import { readFileSync } from "node:fs";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 
 import { inventoryAdjustments, inPersonSales, orderItems, orders } from "./db/schema";
