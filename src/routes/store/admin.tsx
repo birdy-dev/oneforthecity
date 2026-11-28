@@ -20,6 +20,11 @@ export const Route = createFileRoute("/store/admin")({
   component: StoreAdminPage,
 });
 
+function readTextField(formData: FormData, name: string) {
+  const value = formData.get(name);
+  return typeof value === "string" ? value : "";
+}
+
 function StoreAdminPage() {
   const initialData = Route.useLoaderData();
   const dashboardFn = useServerFn(getAdminDashboard);
@@ -59,10 +64,10 @@ function StoreAdminPage() {
     await runAction(async () => {
       await inPersonSaleFn({
         data: {
-          productId: String(formData.get("productId")),
-          size: String(formData.get("size")),
-          quantity: Number(formData.get("quantity")),
-          note: String(formData.get("note") || ""),
+          productId: readTextField(formData, "productId"),
+          size: readTextField(formData, "size"),
+          quantity: Number(readTextField(formData, "quantity")),
+          note: readTextField(formData, "note"),
         },
       });
       form.reset();
@@ -79,10 +84,10 @@ function StoreAdminPage() {
     await runAction(async () => {
       await inventoryAdjustmentFn({
         data: {
-          productId: String(formData.get("productId")),
-          size: String(formData.get("size")),
-          delta: Number(formData.get("delta")),
-          reason: String(formData.get("reason")),
+          productId: readTextField(formData, "productId"),
+          size: readTextField(formData, "size"),
+          delta: Number(readTextField(formData, "delta")),
+          reason: readTextField(formData, "reason"),
         },
       });
       form.reset();

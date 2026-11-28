@@ -15,7 +15,7 @@
     "fmt": "vp fmt",
     "wrangler": "wrangler",
     "drizzle": "drizzle-kit",
-    "dev:stripe": "stripe listen --forward-to localhost:3000/store/webhook/stripe",
+    "dev:stripe": "stripe listen --forward-to localhost:5173/store/webhook/stripe",
     "prod:secrets": "wrangler secret bulk .env.wrangler-secrets"
   },
   "dependencies": {

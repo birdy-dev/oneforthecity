@@ -44,6 +44,10 @@ const THEME: Record<
   },
 };
 
+function focusTimeInput(input: HTMLInputElement | null) {
+  input?.focus();
+}
+
 export function BattleTimer({
   teamName,
   remainingMs,
@@ -74,7 +78,7 @@ export function BattleTimer({
         "flex w-full items-center justify-center p-[2vmin] transition-all duration-150",
         focused ? "opacity-100" : "opacity-70",
       )}
-      onMouseDown={onFocus}
+      onPointerDown={onFocus}
     >
       <div
         className={cn(
@@ -99,8 +103,9 @@ export function BattleTimer({
 
         {editing ? (
           <input
+            aria-label={`Set time for ${teamName}`}
             type="text"
-            autoFocus
+            ref={focusTimeInput}
             placeholder={`${minute}:${second}`}
             className={cn(
               "w-[60%] border-b-2 border-current bg-transparent text-center font-mono font-black outline-none",

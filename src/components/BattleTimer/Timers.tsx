@@ -55,21 +55,22 @@ export function Timers() {
   const [hydrated, setHydrated] = useState(false);
   const [displayNowMs, setDisplayNowMs] = useState(0);
   const helpDialogRef = useRef<HTMLDialogElement>(null);
-  const stateRef = useRef(state);
-  stateRef.current = state;
 
   const availableIds = useMemo(() => availableTimerIds(state.mode), [state.mode]);
   const competitors = useMemo(() => availableIds.map((id) => COMPETITORS[id]), [availableIds]);
 
   useEffect(() => {
-    const nowMs = performance.now();
-    const restored = restoreTimerState(
-      window.localStorage.getItem(TIMER_STORAGE_KEY),
-      Date.now(),
-    );
-    dispatch({ type: "hydrate", state: restored });
-    setDisplayNowMs(nowMs);
-    setHydrated(true);
+    const frameId = window.requestAnimationFrame(() => {
+      let savedState: string | null = null;
+      try {
+        savedState = window.localStorage.getItem(TIMER_STORAGE_KEY);
+      } catch {
+        // Storage can be disabled by the browser.
+      }
+      dispatch({ type: "hydrate", state: restoreTimerState(savedState, Date.now()) });
+      setHydrated(true);
+    });
+    return () => window.cancelAnimationFrame(frameId);
   }, []);
 
   const persist = useCallback((snapshot: TimerMachineState) => {
@@ -86,12 +87,8 @@ export function Timers() {
   useEffect(() => {
     if (!hydrated) return;
     persist(state);
-  }, [hydrated, persist, state]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-
-    const persistLatestState = () => persist(stateRef.current);
+    const persistLatestState = () => persist(state);
     window.addEventListener("pagehide", persistLatestState);
     document.addEventListener("visibilitychange", persistLatestState);
 
@@ -99,7 +96,7 @@ export function Timers() {
       window.removeEventListener("pagehide", persistLatestState);
       document.removeEventListener("visibilitychange", persistLatestState);
     };
-  }, [hydrated, persist]);
+  }, [hydrated, persist, state]);
 
   useEffect(() => {
     if (!hydrated || state.activeId === null) return;
@@ -208,14 +205,7 @@ export function Timers() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [
-    availableIds,
-    editingTimer,
-    hydrated,
-    state.activeId,
-    state.focusedId,
-    state.mode,
-  ]);
+  }, [availableIds, editingTimer, hydrated, state.activeId, state.focusedId, state.mode]);
 
   return (
     <section className="h-100dvh flex w-full items-center justify-center overflow-hidden select-none">
@@ -237,9 +227,7 @@ export function Timers() {
               focused={state.focusedId === competitor.id}
               editing={editingTimer === competitor.id}
               onFocus={() => dispatch({ type: "focus", id: competitor.id })}
-              onRename={(teamName) =>
-                dispatch({ type: "rename", id: competitor.id, teamName })
-              }
+              onRename={(teamName) => dispatch({ type: "rename", id: competitor.id, teamName })}
               onSetTime={(minutes, seconds) => {
                 dispatch({ type: "focus", id: competitor.id });
                 dispatch({

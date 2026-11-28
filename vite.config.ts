@@ -6,7 +6,25 @@ import svgr from "vite-plugin-svgr";
 import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
-  lint: {},
+  lint: {
+    ignorePatterns: ["/src/_archive/**", "/src/routeTree.gen.ts"],
+    options: { typeAware: true },
+    plugins: ["typescript", "unicorn", "oxc", "react", "jsx-a11y"],
+    rules: {
+      "typescript/no-floating-promises": "error",
+      "typescript/no-explicit-any": "error",
+      "react/rules-of-hooks": "error",
+      "react/exhaustive-deps": "error",
+      "jsx-a11y/alt-text": "error",
+      "jsx-a11y/control-has-associated-label": "error",
+    },
+    overrides: [
+      {
+        files: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: { "typescript/no-explicit-any": "off" },
+      },
+    ],
+  },
   fmt: {
     ignorePatterns: ["/src/routeTree.gen.ts"],
     sortTailwindcss: {
@@ -14,9 +32,6 @@ export default defineConfig({
       functions: ["clsx", "cn"],
       preserveWhitespace: true,
     },
-  },
-  server: {
-    port: 3000,
   },
   plugins: lazyPlugins(() => [
     tailwindcss(),
