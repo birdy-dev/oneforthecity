@@ -9,9 +9,10 @@ pnpm dev
 ```
 
 Run project commands through pnpm so they use the managed Node.js version.
-To upgrade Node.js, run `pnpm runtime set node <major>` and update
-`.node-version` to match. Commit the manifest, lockfile, and `.node-version`
-together.
+GitHub Actions reads the same Node.js pin from `devEngines.runtime` in
+`package.json`. To upgrade Node.js, run `pnpm runtime set node <version>`,
+review the `engines.node` compatibility range, and commit `package.json` and
+`pnpm-lock.yaml` together.
 
 Cloudflare Workers runs the deployed app; this Node.js version is for local
 development and build tools.
