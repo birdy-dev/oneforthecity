@@ -2,7 +2,7 @@ import { buttonStyles } from "@/components/Button";
 import { cn } from "@/utils/cn";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { useShoppingCart } from "use-shopping-cart";
+import { redirectToCheckout, useShoppingCart } from "use-shopping-cart";
 
 import { createCheckoutSession } from "./checkout_button.functions";
 import {
@@ -20,7 +20,7 @@ type CheckoutCartEntry = {
 };
 
 export function CheckoutButton() {
-  const { cartCount, cartDetails, redirectToCheckout } = useShoppingCart();
+  const { cartCount, cartDetails } = useShoppingCart();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isCheckoutPending = useRef(false);
@@ -68,7 +68,7 @@ export function CheckoutButton() {
         }),
       );
 
-      await redirectToCheckout(sessionUrl);
+      redirectToCheckout(sessionUrl);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Unable to start checkout.");
     } finally {

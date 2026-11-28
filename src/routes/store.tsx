@@ -2,7 +2,6 @@ import { buttonStyles } from "@/components/Button";
 import { HomeButton } from "@/components/HomeButton";
 import { cn } from "@/utils/cn";
 import { getStoreEnabled } from "@/utils/store_enabled.functions";
-import { stripePublishableKey } from "@/utils/store_config";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { CartProvider, useShoppingCart } from "use-shopping-cart";
 import { StoreBreadcrumbNav } from "./store/-components/store_breadcrumb_nav";
@@ -26,7 +25,7 @@ function StoreLayout() {
   }
 
   return (
-    <CartProvider stripe={stripePublishableKey!} currency="CAD">
+    <CartProvider currency="CAD">
       <StoreShell />
     </CartProvider>
   );
