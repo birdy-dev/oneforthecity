@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vp dev",
     "build": "vp build",
-    "db:generate": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 migrations apply oneforthecity --local",
     "db:migrate:remote": "wrangler d1 migrations apply oneforthecity --remote",
     "test": "vp test run",
