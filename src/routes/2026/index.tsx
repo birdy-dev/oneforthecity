@@ -9,6 +9,15 @@ import { OrganizingTeam } from "./-components/organizing-team";
 import { BrandInstagram, BrandYoutube } from "tabler-icons-react";
 
 export const Route = createFileRoute("/2026/")({
+  head: () => ({
+    meta: [
+      { title: "One for the City Vol. 6 | 2026" },
+      {
+        name: "description",
+        content: "Schedule, lineup, and rulebook for One for the City Vol. 6 in Edmonton, AB.",
+      },
+    ],
+  }),
   loader: async () => getStoreEnabled(),
   component: RouteComponent,
 });
@@ -18,8 +27,14 @@ function RouteComponent() {
 
   return (
     <>
-      <nav className="flex justify-end p-4">
-        <div className="flex gap-2 sm:gap-4">
+      <nav className="flex justify-end p-4" aria-label="Event navigation">
+        <div className="flex flex-wrap justify-end gap-2 sm:gap-4">
+          <Link
+            className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:gap-3 sm:px-3.5"
+            to="/archive"
+          >
+            Past editions
+          </Link>
           <Link
             className="inline-flex w-fit items-center justify-center gap-1 rounded-full px-2 py-1 font-mono text-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900 active:bg-gray-50 sm:gap-3 sm:px-3.5"
             to="/2026/rulebook"

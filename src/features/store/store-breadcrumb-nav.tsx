@@ -10,7 +10,7 @@ export function StoreBreadcrumbNav({ currentPageLabel }: StoreBreadcrumbNavProps
       className="flex flex-wrap items-center gap-3 text-sm text-stone-600"
       aria-label="Breadcrumb"
     >
-      <Link className="transition hover:text-stone-950" to="/2026">
+      <Link className="transition hover:text-stone-950" to="/">
         Home
       </Link>
       <span className="text-stone-400" aria-hidden="true">

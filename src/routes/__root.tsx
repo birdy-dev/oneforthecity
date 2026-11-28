@@ -6,9 +6,7 @@ import { GoogleAnalytics } from "tanstack-router-ga4";
 
 const meta = {
   title: "One for the City",
-  url: "https://oneforthecity.com",
-  description:
-    "At One for the City we celebrate street dance culture and community. Join us this year June 26-28 in Edmonton, AB.",
+  description: "One for the City celebrates street dance culture and community in Edmonton, AB.",
 };
 
 export const Route = createRootRoute({
@@ -25,7 +23,6 @@ export const Route = createRootRoute({
       { name: "robots", content: "index, follow" },
       { name: "language", content: "en" },
       { name: "og:type", content: "website" },
-      { name: "og:url", content: meta.url },
       { name: "og:title", content: meta.title },
       { name: "og:description", content: meta.description },
       {

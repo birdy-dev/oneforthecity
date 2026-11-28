@@ -7,7 +7,7 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
   lint: {
-    ignorePatterns: ["/src/archive/**", "/src/route-tree.gen.ts"],
+    ignorePatterns: ["/src/route-tree.gen.ts"],
     options: { typeAware: true },
     plugins: ["typescript", "unicorn", "oxc", "react", "jsx-a11y"],
     rules: {

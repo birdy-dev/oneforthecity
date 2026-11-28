@@ -102,7 +102,7 @@ function StoreUnavailable() {
   return (
     <main className="min-h-screen bg-stone-50">
       <div className="fixed top-4 left-4 z-50 sm:top-6 sm:left-6 lg:left-8">
-        <HomeButton to="/2026" />
+        <HomeButton />
       </div>
 
       <div className="mx-auto max-w-3xl px-4 pt-24 pb-10 sm:px-6 sm:pt-28 lg:px-8">
@@ -116,7 +116,7 @@ function StoreUnavailable() {
           <p className="mt-4 text-sm leading-6 text-stone-600 sm:text-base">
             The merch store is temporarily unavailable because Stripe is not fully configured.
           </p>
-          <Link className={cn(buttonStyles, "mt-6 rounded-full px-5 py-3 text-sm")} to="/2026">
+          <Link className={cn(buttonStyles, "mt-6 rounded-full px-5 py-3 text-sm")} to="/">
             Back to home
           </Link>
         </section>

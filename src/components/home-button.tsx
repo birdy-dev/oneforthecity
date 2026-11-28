@@ -6,10 +6,9 @@ import { ArrowLeft } from "lucide-react";
 type HomeButtonProps = {
   className?: string;
   showArrow?: boolean;
-  to?: "/home" | "/2026";
 };
 
-export function HomeButton({ className, showArrow = true, to = "/home" }: HomeButtonProps) {
+export function HomeButton({ className, showArrow = true }: HomeButtonProps) {
   return (
     <Link
       className={cn(
@@ -17,7 +16,7 @@ export function HomeButton({ className, showArrow = true, to = "/home" }: HomeBu
         "size-fit flex-none gap-1 rounded-full px-3.5 py-1 text-sm shadow-xs",
         className,
       )}
-      to={to}
+      to="/"
     >
       {showArrow ? <ArrowLeft size={16} /> : null}
       Home

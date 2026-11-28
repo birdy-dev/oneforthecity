@@ -10,7 +10,7 @@ const images = [
 
 export function Gallery() {
   return (
-    <div className="grid grid-cols-1 gap-4 py-16 md:grid-cols-3">
+    <div className="mt-6 mb-12 grid grid-cols-1 gap-4 md:grid-cols-3">
       {images.map((image) => (
         <img
           key={image.alt}
