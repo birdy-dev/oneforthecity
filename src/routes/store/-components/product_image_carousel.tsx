@@ -116,15 +116,6 @@ export function ProductImageCarousel({
     setPointerEndX(null);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!onSelect || (event.key !== "Enter" && event.key !== " ")) {
-      return;
-    }
-
-    event.preventDefault();
-    onSelect();
-  };
-
   return (
     <div
       className={cn(
@@ -133,14 +124,11 @@ export function ProductImageCarousel({
       )}
     >
       <div
-        aria-label={`${productName} images`}
         className={cn(
           "relative touch-pan-y",
           onSelect && "cursor-pointer",
           hasMultipleImages && "cursor-grab active:cursor-grabbing",
         )}
-        onClick={!hasMultipleImages ? onSelect : undefined}
-        onKeyDown={onSelect ? handleKeyDown : undefined}
         onPointerDown={hasMultipleImages ? handlePointerDown : undefined}
         onPointerMove={hasMultipleImages ? handlePointerMove : undefined}
         onPointerUp={hasMultipleImages ? handlePointerUp : undefined}
@@ -155,8 +143,6 @@ export function ProductImageCarousel({
         onTouchEnd={hasMultipleImages ? handleTouchEnd : undefined}
         onTouchMove={hasMultipleImages ? handleTouchMove : undefined}
         onTouchStart={hasMultipleImages ? handleTouchStart : undefined}
-        role={onSelect ? "button" : undefined}
-        tabIndex={onSelect ? 0 : undefined}
       >
         {badge ? (
           <p className="absolute top-4 left-4 z-10 w-fit rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-stone-700 uppercase shadow-sm">
@@ -179,6 +165,18 @@ export function ProductImageCarousel({
             </div>
           ))}
         </div>
+
+        {onSelect && (
+          <button
+            aria-label={`View ${productName}`}
+            className="cursor-inherit absolute inset-0 z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-stone-900"
+            onClick={(event) => {
+              // When swiping is enabled, the gesture handlers handle pointer activation.
+              if (!hasMultipleImages || event.detail === 0) onSelect();
+            }}
+            type="button"
+          />
+        )}
 
         {hasMultipleImages && !isMinimal ? (
           <div className="pointer-events-none absolute inset-x-4 top-1/2 z-10 flex -translate-y-1/2 items-center justify-between">
