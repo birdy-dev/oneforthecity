@@ -1,5 +1,5 @@
 import { CalendarIcon, DotIcon, MapPinIcon } from "lucide-react";
-import videoMp4 from "./video_loop_opt.mp4?url";
+import videoMp4 from "./video-loop-opt.mp4?url";
 
 export function Hero() {
   return (

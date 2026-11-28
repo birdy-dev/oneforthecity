@@ -1,9 +1,9 @@
-import { buttonStyles } from "@/components/Button";
+import { buttonStyles } from "@/components/button";
 import { cn } from "@/utils/cn";
 import { Link } from "@tanstack/react-router";
 import { useShoppingCart } from "use-shopping-cart";
 
-import { CheckoutButton } from "./checkout_button";
+import { CheckoutButton } from "./checkout-button";
 
 type CartItem = {
   formattedPrice?: string;

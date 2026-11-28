@@ -1,15 +1,15 @@
-import { buttonStyles } from "@/components/Button";
-import { Container } from "@/components/Container";
-import { Footer } from "@/components/Footer";
+import { buttonStyles } from "@/components/button";
+import { Container } from "@/components/container";
+import { Footer } from "@/components/footer";
 import { cn } from "@/utils/cn";
-import { getStoreEnabled } from "@/utils/store_enabled.functions";
+import { getStoreEnabled } from "@/utils/store-enabled.functions";
 import instagramIcon from "@/images/icons/instagram.svg";
 import lumaIcon from "@/images/icons/luma.png";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { StoreIcon } from "lucide-react";
-import { Banner } from "./-components/Banner";
-import { Gallery } from "./-components/Gallery";
+import { Banner } from "./-components/banner";
+import { Gallery } from "./-components/gallery";
 
 export const Route = createFileRoute("/home/")({
   loader: async () => getStoreEnabled(),

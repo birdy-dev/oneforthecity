@@ -1,7 +1,7 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useShoppingCart } from "use-shopping-cart";
 
-import { ProductImageCarousel } from "./-components/product_image_carousel";
+import { ProductImageCarousel } from "./-components/product-image-carousel";
 import { getProductSizes, products } from "./-components/products";
 
 export const Route = createFileRoute("/store/products")({

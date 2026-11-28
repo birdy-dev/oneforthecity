@@ -1,11 +1,11 @@
-import type { ProductImage } from "./product_image_carousel";
+import type { ProductImage } from "./product-image-carousel";
 
-const classicFrontImage = "/store/classic_front.png";
-const classicBackImage = "/store/classic_back.png";
-const blueEmbroideredFrontImage = "/store/blue_embroidered_front.png";
-const blueEmbroideredBackImage = "/store/blue_embroidered_back.png";
-const vol6BackImage = "/store/vol6_back.png";
-const vol6FrontImage = "/store/vol6_front.png";
+const classicFrontImage = "/store/classic-front.png";
+const classicBackImage = "/store/classic-back.png";
+const blueEmbroideredFrontImage = "/store/blue-embroidered-front.png";
+const blueEmbroideredBackImage = "/store/blue-embroidered-back.png";
+const vol6BackImage = "/store/vol-6-back.png";
+const vol6FrontImage = "/store/vol-6-front.png";
 
 export type StoreProduct = {
   id: string;
