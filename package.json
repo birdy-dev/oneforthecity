@@ -51,6 +51,7 @@
     "better-sqlite3": "^13.2.0",
     "concurrently": "^10.0.7",
     "drizzle-kit": "^0.31.11",
+    "oxc-transform-react": "^0.156.0",
     "tailwindcss": "^4.3.5",
     "vite": "^8.3.8",
     "vite-plugin-svgr": "^5.2.0",
