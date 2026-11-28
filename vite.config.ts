@@ -21,7 +21,7 @@ export default defineConfig({
   plugins: lazyPlugins(() => [
     tailwindcss(),
     tanstackStart({}),
-    viteReact(),
+    viteReact({ compiler: true }),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     svgr(),
   ]),
