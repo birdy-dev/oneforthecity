@@ -1,8 +1,0 @@
-{
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "experimentalTailwindcss": {
-    "stylesheet": "./src/tailwind.css",
-    "functions": ["clsx", "cn"],
-    "preserveWhitespace": true
-  }
-}
