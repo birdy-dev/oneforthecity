@@ -7,7 +7,7 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 
 export default defineConfig({
   lint: {
-    ignorePatterns: ["/src/_archive/**", "/src/routeTree.gen.ts"],
+    ignorePatterns: ["/src/archive/**", "/src/route-tree.gen.ts"],
     options: { typeAware: true },
     plugins: ["typescript", "unicorn", "oxc", "react", "jsx-a11y"],
     rules: {
@@ -26,7 +26,7 @@ export default defineConfig({
     ],
   },
   fmt: {
-    ignorePatterns: ["/src/routeTree.gen.ts"],
+    ignorePatterns: ["/src/route-tree.gen.ts"],
     sortTailwindcss: {
       stylesheet: "./src/tailwind.css",
       functions: ["clsx", "cn"],
@@ -35,7 +35,7 @@ export default defineConfig({
   },
   plugins: lazyPlugins(() => [
     tailwindcss(),
-    tanstackStart({}),
+    tanstackStart({ router: { generatedRouteTree: "route-tree.gen.ts" } }),
     viteReact({ compiler: true }),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     svgr(),

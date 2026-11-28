@@ -1,6 +1,6 @@
-import { buttonStyles } from "@/components/Button";
+import { buttonStyles } from "@/components/button";
 import { cn } from "@/utils/cn";
-import type { AdminDashboardData, AdminOrder, InventoryRow } from "@/utils/store_inventory";
+import type { AdminDashboardData, AdminOrder, InventoryRow } from "@/utils/store-inventory";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, RotateCcw, Search, Shirt, SlidersHorizontal, Store } from "lucide-react";

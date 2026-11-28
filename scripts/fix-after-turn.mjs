@@ -24,7 +24,7 @@ function runPnpm(cwd, ...args) {
 function fingerprintFiles(root, paths) {
   const files = new Map();
   for (const file of new Set(paths.split("\0"))) {
-    if (!file || file === "src/routeTree.gen.ts") continue;
+    if (!file || file === "src/route-tree.gen.ts") continue;
     const path = resolve(root, file);
     if (lstatSync(path, { throwIfNoEntry: false })?.isFile() && realpathSync(path) === path) {
       files.set(`./${file}`, createHash("sha256").update(readFileSync(path)).digest("hex"));

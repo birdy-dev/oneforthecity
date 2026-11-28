@@ -1,4 +1,4 @@
-import { NotFound } from "@/components/NotFound";
+import { NotFound } from "@/components/not-found";
 import "@/tailwind.css";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Toaster } from "sonner";

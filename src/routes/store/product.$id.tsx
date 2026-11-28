@@ -1,9 +1,9 @@
-import { buttonStyles } from "@/components/Button";
+import { buttonStyles } from "@/components/button";
 import { cn } from "@/utils/cn";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useShoppingCart } from "use-shopping-cart";
 
-import { ProductImageCarousel } from "./-components/product_image_carousel";
+import { ProductImageCarousel } from "./-components/product-image-carousel";
 import {
   createCartItem,
   getProductById,

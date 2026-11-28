@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Stripe from "stripe";
 
-import { createPaidOrderFromCheckoutSession } from "@/utils/stripe_orders";
-import { STRIPE_STORE_SESSION_SOURCE } from "@/utils/stripe_store";
+import { createPaidOrderFromCheckoutSession } from "@/utils/stripe-orders";
+import { STRIPE_STORE_SESSION_SOURCE } from "@/utils/stripe-store";
 
 export const Route = createFileRoute("/store/webhook/stripe")({
   server: {

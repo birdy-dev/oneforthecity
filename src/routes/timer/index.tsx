@@ -1,4 +1,4 @@
-import { Timers } from "@/components/BattleTimer/Timers";
+import { Timers } from "@/components/battle-timer/timers";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/timer/")({

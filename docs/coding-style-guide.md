@@ -1,9 +1,18 @@
 # Coding style guide
 
+## Naming
+
+- Use lowercase filenames with hyphens between words and lowercase extensions
+  across the repository, including for components, hooks, tests, and assets.
+- Use uppercase basenames and lowercase `.md` extensions for conventional
+  root documents such as `AGENTS.md`, `README.md`, and `LICENSE.md`.
+- Keep required tool and framework filenames such as `__root.tsx`,
+  `product.$id.tsx`, and `_redirects`. Keep existing migration names.
+- Use UpperCamelCase (PascalCase) for React components and lowerCamelCase for
+  hooks, other functions, and variables.
+
 ## TypeScript and React
 
-- Follow the conventions in neighboring files. Use PascalCase for React
-  components and camelCase for functions and variables.
 - Use `import type` for type-only imports. Let TypeScript infer obvious types
   and use explicit types where they clarify a contract.
 - Use `@/` for imports across areas of `src/` and relative imports for nearby
@@ -17,7 +26,7 @@
   helpers near their routes, using `-components/` where appropriate. Put shared
   UI in `src/components/`.
 - Make route changes in the route files and let TanStack Router regenerate
-  `src/routeTree.gen.ts`. The shared formatter skips this generated file.
+  `src/route-tree.gen.ts`. The shared formatter skips this generated file.
 - Keep database access and secrets in server code. Validate server function
   inputs at the boundary using the existing Zod patterns.
 

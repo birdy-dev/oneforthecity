@@ -1,10 +1,10 @@
-import { buttonStyles } from "@/components/Button";
-import { HomeButton } from "@/components/HomeButton";
+import { buttonStyles } from "@/components/button";
+import { HomeButton } from "@/components/home-button";
 import { cn } from "@/utils/cn";
-import { getStoreEnabled } from "@/utils/store_enabled.functions";
+import { getStoreEnabled } from "@/utils/store-enabled.functions";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { CartProvider, useShoppingCart } from "use-shopping-cart";
-import { StoreBreadcrumbNav } from "./store/-components/store_breadcrumb_nav";
+import { StoreBreadcrumbNav } from "./store/-components/store-breadcrumb-nav";
 import { getProductById } from "./store/-components/products";
 
 export const Route = createFileRoute("/store")({

@@ -4,7 +4,7 @@ import {
   createAdminAuthCookieHeader,
   createBasicAuthChallengeResponse,
   isBasicAuthAuthorized,
-} from "@/utils/admin_auth";
+} from "@/utils/admin-auth";
 
 type WorkerEnv = {
   ADMIN_PASSWORD?: string;

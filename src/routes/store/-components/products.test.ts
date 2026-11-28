@@ -16,7 +16,7 @@ describe("store products", () => {
 
     expect(product).toMatchObject({
       name: "Blue Embroidered Tee",
-      image: "/store/blue_embroidered_front.png",
+      image: "/store/blue-embroidered-front.png",
       stockBySize: {
         S: 1,
         L: 10,

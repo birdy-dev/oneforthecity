@@ -1,10 +1,10 @@
-import { buttonStyles } from "@/components/Button";
+import { buttonStyles } from "@/components/button";
 import { cn } from "@/utils/cn";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useShoppingCart } from "use-shopping-cart";
 
-import { clearCheckoutAttempt } from "./-components/checkout_attempt";
+import { clearCheckoutAttempt } from "./-components/checkout-attempt";
 
 export const Route = createFileRoute("/store/success")({
   component: SuccessPage,
