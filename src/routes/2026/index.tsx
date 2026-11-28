@@ -1,6 +1,6 @@
 import { buttonStyles } from "@/components/button";
 import { cn } from "@/utils/cn";
-import { getStoreEnabled } from "@/utils/store-enabled.functions";
+import { getStoreEnabled } from "@/features/store/store-enabled.functions";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { People } from "./-components/people";
 import { Schedule } from "./-components/schedule";

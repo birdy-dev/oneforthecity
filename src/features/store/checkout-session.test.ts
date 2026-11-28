@@ -12,7 +12,7 @@ vi.mock("@tanstack/react-start/server", () => ({
   getRequest: () => new Request("https://oneforthecity.com/store/cart"),
 }));
 
-vi.mock("@/utils/store-inventory", () => ({
+vi.mock("./store-inventory", () => ({
   getInventoryRows: async () => [{ productId: "vol-6-tee", size: "M", remainingAvailable: 20 }],
 }));
 

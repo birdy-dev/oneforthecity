@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 
-import { getDb } from "@/db";
-import { orderItems, orders } from "@/db/schema";
-import { getProductById } from "@/routes/store/-components/products";
+import { getDb } from "./db";
+import { orderItems, orders } from "./db/schema";
+import { getProductById } from "./products";
 
 type StripeOrderLineItem = {
   productId: string;

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 
-import { inventoryAdjustments, inPersonSales, orderItems, orders } from "@/db/schema";
+import { inventoryAdjustments, inPersonSales, orderItems, orders } from "./db/schema";
 
 const dbState = vi.hoisted(() => ({
   db: undefined as any,
@@ -14,7 +14,7 @@ const stripeState = vi.hoisted(() => ({
   listLineItems: vi.fn(),
 }));
 
-vi.mock("@/db", () => ({
+vi.mock("./db", () => ({
   getDb: () => dbState.db,
 }));
 
@@ -30,9 +30,12 @@ vi.mock("stripe", () => ({
   }),
 }));
 
-import { createPaidOrderFromCheckoutSession } from "@/utils/stripe-orders";
+import { createPaidOrderFromCheckoutSession } from "./stripe-orders";
 
-const migrationSql = readFileSync(new URL("../../drizzle/0000_store.sql", import.meta.url), "utf8");
+const migrationSql = readFileSync(
+  new URL("../../../drizzle/0000_store.sql", import.meta.url),
+  "utf8",
+);
 
 beforeEach(() => {
   vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_store");

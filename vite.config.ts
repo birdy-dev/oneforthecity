@@ -33,14 +33,22 @@ export default defineConfig({
       preserveWhitespace: true,
     },
   },
-  plugins: lazyPlugins(() => [
-    tailwindcss(),
-    tanstackStart({ router: { generatedRouteTree: "route-tree.gen.ts" } }),
-    viteReact({ compiler: true }),
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
-    svgr(),
-  ]),
+  plugins: lazyPlugins(() => {
+    if (process.env.VITEST === "true") return [];
+
+    return [
+      tailwindcss(),
+      tanstackStart({ router: { generatedRouteTree: "route-tree.gen.ts" } }),
+      viteReact({ compiler: true }),
+      cloudflare({ viteEnvironment: { name: "ssr" } }),
+      svgr(),
+    ];
+  }),
   resolve: {
     tsconfigPaths: true,
+  },
+  test: {
+    environment: "node",
+    globals: false,
   },
 });

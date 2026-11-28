@@ -80,11 +80,7 @@ function pauseTimer(timer: TimerState, nowMs: number): TimerState {
   };
 }
 
-function withTimer(
-  state: TimerMachineState,
-  id: TimerId,
-  timer: TimerState,
-): TimerMachineState {
+function withTimer(state: TimerMachineState, id: TimerId, timer: TimerState): TimerMachineState {
   return {
     ...state,
     timers: {
@@ -123,10 +119,7 @@ function updateFocusedDuration(
   };
 }
 
-export function timerReducer(
-  state: TimerMachineState,
-  action: TimerAction,
-): TimerMachineState {
+export function timerReducer(state: TimerMachineState, action: TimerAction): TimerMachineState {
   switch (action.type) {
     case "hydrate":
       return action.state;

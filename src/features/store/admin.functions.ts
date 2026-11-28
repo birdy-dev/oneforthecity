@@ -1,13 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { requireAdminAuth } from "@/utils/admin-auth";
+import { requireAdminAuth } from "./admin-auth";
 import {
   getAdminDashboard as getAdminDashboardData,
   recordInPersonSale,
   recordInventoryAdjustment,
   setOrderFulfilled,
-} from "@/utils/store-inventory";
+} from "./store-inventory";
 
 const getAdminDashboardSchema = z.object({
   searchEmail: z.string().trim().max(254).optional(),

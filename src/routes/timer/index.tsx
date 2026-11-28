@@ -1,14 +1,6 @@
-import { Timers } from "@/components/battle-timer/timers";
+import { TimerPage } from "@/features/battle-timer/timer-page";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/timer/")({
-  component: Timer,
+  component: TimerPage,
 });
-
-function Timer() {
-  return (
-    <div className="size-screen min-h-screen bg-black text-white">
-      <Timers />
-    </div>
-  );
-}

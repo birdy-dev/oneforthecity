@@ -3,14 +3,14 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 
-import { inventoryAdjustments, inPersonSales, orderItems, orders } from "@/db/schema";
+import { inventoryAdjustments, inPersonSales, orderItems, orders } from "./db/schema";
 
 const dbState = vi.hoisted(() => ({
   db: undefined as any,
   sqlite: undefined as Database.Database | undefined,
 }));
 
-vi.mock("@/db", () => ({
+vi.mock("./db", () => ({
   getDb: () => dbState.db,
 }));
 
@@ -20,9 +20,12 @@ import {
   getOrders,
   recordInPersonSale,
   setOrderFulfilled,
-} from "@/utils/store-inventory";
+} from "./store-inventory";
 
-const migrationSql = readFileSync(new URL("../../drizzle/0000_store.sql", import.meta.url), "utf8");
+const migrationSql = readFileSync(
+  new URL("../../../drizzle/0000_store.sql", import.meta.url),
+  "utf8",
+);
 
 beforeEach(() => {
   dbState.sqlite = new Database(":memory:");

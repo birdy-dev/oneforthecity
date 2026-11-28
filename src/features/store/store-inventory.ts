@@ -1,18 +1,14 @@
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 
-import { getDb } from "@/db";
+import { getDb } from "./db";
 import {
   inventoryAdjustments,
   inventoryStock,
   inPersonSales,
   orderItems,
   orders,
-} from "@/db/schema";
-import {
-  getCatalogStockQuantity,
-  getCatalogStockRows,
-  getProductById,
-} from "@/routes/store/-components/products";
+} from "./db/schema";
+import { getCatalogStockQuantity, getCatalogStockRows, getProductById } from "./products";
 
 export type InventoryRow = {
   productId: string;

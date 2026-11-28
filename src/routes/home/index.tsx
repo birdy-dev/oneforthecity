@@ -2,7 +2,7 @@ import { buttonStyles } from "@/components/button";
 import { Container } from "@/components/container";
 import { Footer } from "@/components/footer";
 import { cn } from "@/utils/cn";
-import { getStoreEnabled } from "@/utils/store-enabled.functions";
+import { getStoreEnabled } from "@/features/store/store-enabled.functions";
 import instagramIcon from "@/images/icons/instagram.svg";
 import lumaIcon from "@/images/icons/luma.png";
 import { createFileRoute, Link } from "@tanstack/react-router";

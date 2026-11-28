@@ -3,8 +3,8 @@ import { getRequest } from "@tanstack/react-start/server";
 import Stripe from "stripe";
 import { z } from "zod";
 
-import { getInventoryRows } from "@/utils/store-inventory";
-import { STRIPE_STORE_SESSION_SOURCE } from "@/utils/stripe-store";
+import { getInventoryRows } from "./store-inventory";
+import { STRIPE_STORE_SESSION_SOURCE } from "./stripe-store";
 import { getUnavailableInventoryMessage } from "./checkout-inventory";
 import { getPresaleCheckoutExpiration, getStripeCheckoutIdempotencyKey } from "./checkout-policy";
 import { getProductById, hasProductSize } from "./products";
